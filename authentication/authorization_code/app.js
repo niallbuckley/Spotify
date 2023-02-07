@@ -98,12 +98,13 @@ app.get('/callback', function(req, res) {
           json: true
         };
         console.log(options);
-        options.url  = 'https://api.spotify.com/v1/me/top/tracks?limit=3'
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
         });
+
+        options.url  = 'https://api.spotify.com/v1/me/top/tracks?limit=3'
 
         request.get(options, function(error, response, body) {
           console.log(body);
