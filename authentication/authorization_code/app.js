@@ -60,6 +60,8 @@ function makePlaylist(user_id, my_tracks, access_token) {
     let playlist_id = createEmptyPlaylist(user_id, access_token);
     let song_data = parseBodyGetTracks(my_tracks);
     console.log("Helloo ", playlist_id);
+
+    // this call should only be run afrer the previous 2 requests have completed
     let url = 'https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks';
     console.log(url);
     var options = {
