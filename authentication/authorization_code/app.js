@@ -4,7 +4,6 @@
  * the Spotify Accounts.
  *
  * For more information, read
- * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
 var express = require('express'); // Express web server framework
@@ -32,6 +31,31 @@ var generateRandomString = function(length) {
   return text;
 };
 
+function parseBodyGetTracks(body) {
+    console.log(body.items[0].id);
+    var tracklst = [];
+    for (let i=0; i<body.items.length; i++) {
+       console.log(body.items[i].uri);
+       tracklst.push(body.items[i].uri);
+    }
+    return {"uris" :tracklst};
+}
+
+
+function makePlaylist(body, access_token) {
+    let song_data = parseBodyGetTracks(body);
+    console.log(song_data);
+    var options = {
+          url: 'https://api.spotify.com/v1/playlists/6Bw8SRPsvrlfq0GZWq21K1/tracks',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: song_data 
+          //json: true
+        };
+    request.post(options, function (error, response, body){
+         console.log(body);
+    });
+}
+
 var stateKey = 'spotify_auth_state';
 
 var app = express();
@@ -46,7 +70,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read';
+  var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -107,7 +131,7 @@ app.get('/callback', function(req, res) {
         options.url  = 'https://api.spotify.com/v1/me/top/tracks?limit=3'
 
         request.get(options, function(error, response, body) {
-          console.log(body);
+            let playlist = makePlaylist(body, access_token);
         });
 
         // we can also pass the token to the browser to make requests from there
