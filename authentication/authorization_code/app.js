@@ -41,15 +41,29 @@ function parseBodyGetTracks(body) {
     return {"uris" :tracklst};
 }
 
+function createEmptyPlaylist(id, token){
+     console.log(id);
+     create_playlist_api = "https://api.spotify.com/v1/users/buckleyniall100/playlists"
+     var options = {
+          url: create_playlist_api,
+          headers: { 'Authorization': 'Bearer ' + token },
+          json: { "name": "IDK", "description" : "Yo", "public" : false }
+        }; 
+     request.post(options, function(error, response, body) {
+          console.log(body);
+     });
+     return body.id
 
-function makePlaylist(body, access_token) {
-    let song_data = parseBodyGetTracks(body);
+}
+
+function makePlaylist(user_id, my_tracks, access_token) {
+    let playlist_id = createEmptyPlaylist(user_id, access_token)
+    let song_data = parseBodyGetTracks(my_tracks);
     console.log(song_data);
     var options = {
           url: 'https://api.spotify.com/v1/playlists/6Bw8SRPsvrlfq0GZWq21K1/tracks',
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: song_data 
-          //json: true
         };
     request.post(options, function (error, response, body){
          console.log(body);
@@ -126,12 +140,13 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
+          user_id = body.id;
         });
 
         options.url  = 'https://api.spotify.com/v1/me/top/tracks?limit=3'
 
         request.get(options, function(error, response, body) {
-            let playlist = makePlaylist(body, access_token);
+            let playlist = makePlaylist(user_id, body, access_token);
         });
 
         // we can also pass the token to the browser to make requests from there
