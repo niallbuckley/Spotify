@@ -42,26 +42,28 @@ function parseBodyGetTracks(body) {
 }
 
 function createEmptyPlaylist(id, token){
-     console.log(id);
-     create_playlist_api = "https://api.spotify.com/v1/users/buckleyniall100/playlists"
+     create_playlist_api = "https://api.spotify.com/v1/users/" + id + "/playlists";
+     var play_lst_id;
      var options = {
           url: create_playlist_api,
           headers: { 'Authorization': 'Bearer ' + token },
           json: { "name": "IDK", "description" : "Yo", "public" : false }
         }; 
      request.post(options, function(error, response, body) {
-          console.log(body);
+          console.log("Ok: ", body.id);
+           play_lst_id = body.id;
      });
-     return body.id
-
+     return play_lst_id;
 }
 
 function makePlaylist(user_id, my_tracks, access_token) {
-    let playlist_id = createEmptyPlaylist(user_id, access_token)
+    let playlist_id = createEmptyPlaylist(user_id, access_token);
     let song_data = parseBodyGetTracks(my_tracks);
-    console.log(song_data);
+    console.log("Helloo ", playlist_id);
+    let url = 'https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks';
+    console.log(url);
     var options = {
-          url: 'https://api.spotify.com/v1/playlists/6Bw8SRPsvrlfq0GZWq21K1/tracks',
+          url: url,
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: song_data 
         };
