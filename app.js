@@ -8,7 +8,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.use('/', require('./routes/login'));
-app.use('/', require('./routes/login-spotify'));
+app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/mode'));
 //app.get('/login-spotify', function(req, res) { require('./routes/login-spotify')});
 
