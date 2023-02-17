@@ -6,8 +6,7 @@ var cookieParser = require('cookie-parser');
 
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
-//var redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
-var redirect_uri = 'http://localhost:4111/mode';
+var redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
 
 var stateKey = 'spotify_auth_state';
 

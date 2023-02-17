@@ -1,4 +1,3 @@
-//js
 const express = require('express');
 const { loginView } = require('../controllers/loginController');
 const router = express.Router();

@@ -15,7 +15,7 @@ const modeChoiceView = (req, res) => {
 	  error: 'state_mismatch'
 	}));
     }
-    // This is looking at views diretory and looking for login name
+    // This is looking at views diretory 
     else {
       res.render("mode", {
       }); 
