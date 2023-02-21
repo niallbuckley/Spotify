@@ -8,9 +8,7 @@ app.set('view engine', 'ejs');
 
 app.use('/', require('./routes/login'));
 app.use('/', require('./controllers/loginSpotifyController'));
-app.use('/', require('./routes/mode'));
-app.use('/', require('./routes/host-lobby'));
-app.use('/', require('./routes/join-lobby'));
+app.use('/', require('./routes/routes'));
 
 const PORT = process.env.PORT || 4111;
 app.listen(PORT, console.log("Server listening on port: " + PORT));
