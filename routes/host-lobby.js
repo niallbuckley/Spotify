@@ -1,6 +1,6 @@
 const express = require('express');
-const hostLobbyView = require('../controllers/hostLobbyController');
+const joinLobbyView = require('../controllers/joinLobbyController');
 const router = express.Router();
 
-router.get('/host-lobby', hostLobbyView);
+router.get('/join-lobby', joinLobbyView);
 module.exports = router;
