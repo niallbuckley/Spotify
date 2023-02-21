@@ -7,9 +7,7 @@ const path = require('path');
 const filePath = path.join(__dirname, './../database.json');
 
 
-const modeChoiceView = (req, res) => {
-    var code = req.query.code || null;
-    var state = req.query.state || null;
+const hostLobbyView = (req, res) => {
     var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -29,43 +27,19 @@ const modeChoiceView = (req, res) => {
         stateInDatabase = true;
       }
 
-      if ((state === null || state !== storedState) === true && stateInDatabase === false) {
-        console.log("REDIRECT");
+      if (stateInDatabase === false) {
+        console.log("UNAUTH");
         res.redirect('/#' +
            querystring.stringify({
               error: 'state_mismatch'
            }));
       }
       else {
-  
-        // Check if the key exists in the JSON data
-        if (jsonData.hasOwnProperty(state)) {
-          console.log('The key already exists in the JSON data.');
-        }
-        else{
-          // If the key does not exist, add it to the database
-
-          jsonData[state] = 'true'
-          console.log(jsonData);
-
-          // Convert the JSON data to a string
-          const jsonString = JSON.stringify(jsonData, null, 2);
-
-          // Write the updated data back to the file
-          fs.writeFile(filePath, jsonString, 'utf8', (err) => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-
-            console.log('The key was successfully added to the JSON data.');
-          });
-        }
         // This is looking at views diretory 
-        res.render("mode", {
+        res.render("joinLobby", {
         }); 
       }
     });
 }
 
-module.exports = modeChoiceView;
+module.exports = hostLobbyView;
