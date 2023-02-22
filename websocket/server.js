@@ -4,6 +4,7 @@ const WebSocketServer = WebSocket.Server;
 
 const server = new WebSocketServer({ port: 3000 });
 
+console.log("Socket Server started");
 
 server.on("connection", (socket) => {
   // send a message to the client
@@ -19,6 +20,8 @@ server.on("connection", (socket) => {
     switch (packet.type) {
       case "hello from client":
         // ...
+        console.log("Server: message received from client")
+        document.getElementById("messages").innerHTML = "Client Joined";
         break;
     }
   });
