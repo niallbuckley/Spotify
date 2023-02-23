@@ -14,7 +14,13 @@
       <div id="messages">
         <!-- existing messages will be displayed here -->
       </div>
-      <script src="./websocket/server.js"></script>
+      <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        socket.addEventListener('open', (event) => {
+        console.log('WebSocket connected');
+        });
+      </script>
     </div>
   </body>
 </html>

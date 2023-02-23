@@ -38,31 +38,45 @@ const hostLobbyView = (req, res) => {
         // This is looking at views diretory 
         res.render("hostLobby", {
         }); 
-        const WebSocket = require("ws");
-        const WebSocketServer = WebSocket.Server;
+        // serve the static files from the 'public' directory
+        //app.use(express.static('public'));
 
-        const server = new WebSocketServer({ port: 3000 });
+        // create a new WebSocket server
+        const WebSocket = require('ws');
+        const wss = new WebSocket.Server({ port: 3000 });
+        console.log("web socket set up on server")
 
-        console.log("Socket Server started");
+        // keep track of connected clients
+        const clients = new Set();
 
-        server.on("connection", (socket) => {
-          // send a message to the client
-          socket.send(JSON.stringify({
-            type: "hello from server",
-            content: [ 1, "2" ]
-          }));
+        // broadcast a message to all clients
+        function broadcast(message) {
+          for (const client of clients) {
+            client.send(message);
+          }
+        }
 
-          // receive a message from the client
-          socket.on("message", (data) => {
-            const packet = JSON.parse(data);
+        // listen for new WebSocket connections
+        wss.on('connection', (socket) => {
+          console.log('New client connected');
 
-            switch (packet.type) {
-              case "hello from client":
-                // ...
-                console.log("Server: message received from client")
-                //document.getElementById("messages").innerHTML = "Client Joined";
-                break;
-            }
+          // add the new client to the set of connected clients
+          clients.add(socket);
+
+          // listen for messages from the client
+          socket.on('message', (message) => {
+            console.log(`Received message: ${message}`);
+
+            // broadcast the message to all clients
+            broadcast(message);
+          });
+
+          // listen for the socket to close
+          socket.on('close', () => {
+            console.log('Client disconnected');
+
+            // remove the client from the set of connected clients
+            clients.delete(socket);
           });
         });
       }
