@@ -29,8 +29,15 @@
         socket.addEventListener('message', (event) => {
           const messagesDiv = document.getElementById('messages');
           const messageP = document.createElement('p');
-          messageP.innerText = event.data;
-          messagesDiv.appendChild(messageP);
+          if (event.data instanceof Blob) {
+            reader = new FileReader();
+
+            reader.onload = () => {
+              messageP.innerText = reader.result;
+              messagesDiv.appendChild(messageP);
+            };
+            reader.readAsText(event.data);
+          }
         });
 
       </script>
