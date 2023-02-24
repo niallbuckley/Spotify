@@ -28,16 +28,15 @@
 
         // Recieved a message from the web socker
         socket.addEventListener('message', (event) => {
+          console.log("message received")
           const messagesDiv = document.getElementById('messages');
           const messageP = document.createElement('p');
           if (event.data instanceof Blob) {
-            reader = new FileReader();
-
-            reader.onload = () => {
-              messageP.innerText = reader.result;
+            event.data.text().then(text => { 
+              console.log(text);
+              messageP.innerText = text;
               messagesDiv.appendChild(messageP);
-            };
-            reader.readAsText(event.data);
+            })
           }
         });
       </script>

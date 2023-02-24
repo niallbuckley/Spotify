@@ -79,6 +79,7 @@ const hostLobbyView = (req, res) => {
 
             // add message to chat history
             messageHistory.push(message);
+            console.log(messageHistory);
 
             // broadcast the message to all clients
             broadcast(message);
