@@ -11,6 +11,36 @@
         <h1>Host Lobby</h1>
         <p> Waiting on others ...  </p>
       </div>
+      <div id="messages">
+        <!-- existing messages will be displayed here -->
+      </div>
+      <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        // Open connection to the web socket sever
+        socket.addEventListener('open', (event) => {
+          console.log('WebSocket connected');
+          // Send message to web socket saying you have joined.
+          message = "Owner has joined";
+          socket.send(message);
+        });
+
+        // Recieved a message from the web socker
+        socket.addEventListener('message', (event) => {
+          const messagesDiv = document.getElementById('messages');
+          const messageP = document.createElement('p');
+          if (event.data instanceof Blob) {
+            reader = new FileReader();
+
+            reader.onload = () => {
+              messageP.innerText = reader.result;
+              messagesDiv.appendChild(messageP);
+            };
+            reader.readAsText(event.data);
+          }
+        });
+
+      </script>
     </div>
   </body>
 </html>

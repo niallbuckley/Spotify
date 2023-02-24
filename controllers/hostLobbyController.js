@@ -36,8 +36,62 @@ const hostLobbyView = (req, res) => {
       }
       else {
         // This is looking at views diretory 
-        res.render("hostLobby", {
-        }); 
+        res.render("hostLobby", {}); 
+
+
+        // create a new WebSocket server
+        console.log("create a new web socket")
+        const WebSocket = require('ws');
+
+        const wss = new WebSocket.Server({ port: 3000 });
+        
+        // keep track of connected clients
+        const clients = new Set();
+        // keep track of messages sent
+        const messageHistory = [];
+
+        // broadcast a message to all clients
+        function broadcast(message) {
+          for (const client of clients) {
+            client.send(message);
+          }
+        }
+
+        // send message history
+        function sendMessageHistory(socket) {
+          for (const message of messageHistory) {
+            socket.send(message);
+          }
+        }
+
+        // listen for new WebSocket connections
+        wss.on('connection', (socket) => {
+          console.log('New client connected');
+
+          // add the new client to the set of connected clients
+          clients.add(socket);
+
+          sendMessageHistory(socket);
+
+          // listen for messages from the client
+          socket.on('message', (message) => {
+            console.log(`Received message: ${message}`);
+
+            // add message to chat history
+            messageHistory.push(message);
+
+            // broadcast the message to all clients
+            broadcast(message);
+          });
+
+          // listen for the socket to close
+          socket.on('close', () => {
+            console.log('Client disconnected');
+
+            // remove the client from the set of connected clients
+            clients.delete(socket);
+          });
+        });
       }
     });
 }
