@@ -7,7 +7,7 @@ const path = require('path');
 const filePath = path.join(__dirname, './../database.json');
 
 
-const hostLobbyView = (req, res) => {
+const joinLobbyView = (req, res) => {
     var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -42,4 +42,4 @@ const hostLobbyView = (req, res) => {
     });
 }
 
-module.exports = hostLobbyView;
+module.exports = joinLobbyView;
