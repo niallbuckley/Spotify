@@ -10,5 +10,10 @@ app.use('/', require('./routes/login'));
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
+app.get('/spotify-auth-token', (req, res) =>  {
+    console.log(res.cookie('spotify_auth_state', state));
+
+})
+
 const PORT = process.env.PORT || 4111;
 app.listen(PORT, console.log("Server listening on port: " + PORT));
