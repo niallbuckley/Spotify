@@ -44,6 +44,7 @@ const hostLobbyView = (req, res) => {
         const WebSocket = require('ws');
 
         // const wss = new WebSocket.Server({ port: 3000, path: '/id/12345', host: 'localhost', protocol: 'ws' });
+        
         const wss = new WebSocket.Server({ port: 3000 });
         
         // keep track of connected clients
