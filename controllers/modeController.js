@@ -2,14 +2,9 @@ var querystring = require('querystring');
 var stateKey = 'spotify_auth_state';
 const fs = require('fs');
 const path = require('path');
-var request = require('request'); // "Request" library
 
 // Define the filepath
 const filePath = path.join(__dirname, './../database.json');
-
-var redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
-var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
-var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 
 const modeChoiceView = (req, res) => {
     var code = req.query.code || null;
@@ -17,11 +12,9 @@ const modeChoiceView = (req, res) => {
     var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
-    console.log(req.headers);
 
 
-
-    var authOptions = {
+    /*var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
@@ -45,14 +38,16 @@ const modeChoiceView = (req, res) => {
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: true
         };
-
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-	      console.log(body);
+             console.log("Me ", response.statusCode, body.display_name);
+             const displayName = body.display_name;
           })
       }
-      else{  console.log(response.body) }
-    })
+      else{  console.log("ERROR ",response.body) }
+    })*/
+    const displayNameFile = require('./getDisplayName.js');
+
 
     // Read the existing data from the database
     fs.readFile(filePath, 'utf8', (err, data) => {
@@ -84,8 +79,10 @@ const modeChoiceView = (req, res) => {
         }
         else{
           // If the key does not exist, add it to the database
-
-          jsonData[state] = 'true'
+          //console.log("hhheerreee")
+          console.log("prop display name ", displayNameFile.displayName(code));
+          
+          jsonData[state] = "true"
           console.log(jsonData);
 
           // Convert the JSON data to a string
@@ -97,7 +94,7 @@ const modeChoiceView = (req, res) => {
               console.error(err);
               return;
             }
-
+            console.log(jsonString);
             console.log('The key was successfully added to the JSON data.');
           });
         }
