@@ -79,9 +79,7 @@ const modeChoiceView = (req, res) => {
               };
               // use the access token to access the Spotify Web API
               request.get(options, function(error, response, body) {
-                    const display_name = body.display_name;
-                    console.log("DisNAME: ", display_name);
-                    jsonData[state] = display_name
+                    jsonData[state] = body.display_name
                     
                     // Convert the JSON data to a string
                     const jsonString = JSON.stringify(jsonData, null, 2);
