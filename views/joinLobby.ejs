@@ -22,11 +22,16 @@
         socket.addEventListener('open', (event) => {
           console.log('WebSocket connected');
           // Send message to web socket saying you have joined.
-          message = "Client has joined";
-          socket.send(message);
+          fetch('/spotify-username')
+              .then(response => response.json())
+              .then(data => {
+                message = data.user_name + " has joined"
+                socket.send(message);
+              })
+              .catch(error => console.error(error));
         });
 
-        // Recieved a message from the web socker
+        // Recieved a message from the web socket
         socket.addEventListener('message', (event) => {
           console.log("message received")
           const messagesDiv = document.getElementById('messages');
