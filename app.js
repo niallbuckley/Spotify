@@ -10,8 +10,10 @@ app.use('/', require('./routes/login'));
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
-app.get('/spotify-auth-token', (req, res) =>  {
-    console.log(res.cookie('spotify_auth_state', state));
+app.get('/spotify-username', (req, res) =>  {
+    console.log('HHHEEELLLOOO   ', req.cookies.spotify_auth_state);
+    user = req.cookies.spotify_auth_state;
+    res.send("Hello Client");
 
 })
 

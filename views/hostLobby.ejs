@@ -15,6 +15,9 @@
         <!-- existing messages will be displayed here -->
       </div>
       <script>
+        // get displayname 
+        fetch('/spotify-username').then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
+
         const socket = new WebSocket('ws://localhost:3000');
 
         // Open connection to the web socket sever
