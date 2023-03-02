@@ -20,9 +20,15 @@
         // Open connection to the web socket sever
         socket.addEventListener('open', (event) => {
           console.log('WebSocket connected');
-          // Send message to web socket saying you have joined.
-          message = "Owner has joined";
-          socket.send(message);
+          // Fetch the users display name
+          fetch('/spotify-username')
+              .then(response => response.json())
+              .then(data => {
+                message = data.user_name + " (owner) has joined"
+                // Send message to web socket saying you have joined.
+                socket.send(message);
+              })
+              .catch(error => console.error(error));
         });
 
         // Recieved a message from the web socker
