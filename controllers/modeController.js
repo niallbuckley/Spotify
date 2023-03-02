@@ -9,7 +9,7 @@ var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 
 var request = require('request'); // "Request" library
 
-// Define the filepath
+// Define file path to database
 const filePath = path.join(__dirname, './../database.json');
 
 const modeChoiceView = (req, res) => {
@@ -31,7 +31,6 @@ const modeChoiceView = (req, res) => {
 
       // Check if the key exists in the JSON data
       if (jsonData.hasOwnProperty(storedState)) {
-        console.log("state in database.")
         stateInDatabase = true;
       }
 
@@ -49,9 +48,7 @@ const modeChoiceView = (req, res) => {
           console.log('The key already exists in the JSON data.');
         }
         else{
-          // If the key does not exist, add it to the database
-          //console.log("hhheerreee")
-          //console.log("prop display name ", displayNameFile.displayName(code));
+          // If the key does not exist, add it to the database Along with spotify display name
           
           var authOptions = {
             url: 'https://accounts.spotify.com/api/token',
@@ -70,8 +67,7 @@ const modeChoiceView = (req, res) => {
             if (!error && response.statusCode === 200) {
           
               var access_token = body.access_token;
-          
-              console.log("access token:  ", access_token);
+
               var options = {
                 url: 'https://api.spotify.com/v1/me',
                 headers: { 'Authorization': 'Bearer ' + access_token },
@@ -79,6 +75,7 @@ const modeChoiceView = (req, res) => {
               };
               // use the access token to access the Spotify Web API
               request.get(options, function(error, response, body) {
+                    // Store auth cookie with the spotify display name in the database
                     jsonData[state] = body.display_name
                     
                     // Convert the JSON data to a string

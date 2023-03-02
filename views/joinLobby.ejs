@@ -21,7 +21,6 @@
         // Open connection to the web socket sever
         socket.addEventListener('open', (event) => {
           console.log('WebSocket connected');
-          // Send message to web socket saying you have joined.
           fetch('/spotify-username')
               .then(response => response.json())
               .then(data => {

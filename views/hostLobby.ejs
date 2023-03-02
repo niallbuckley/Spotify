@@ -15,19 +15,17 @@
         <!-- existing messages will be displayed here -->
       </div>
       <script>
-        // get displayname 
-        //fetch('/spotify-username').then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
-
         const socket = new WebSocket('ws://localhost:3000');
 
         // Open connection to the web socket sever
         socket.addEventListener('open', (event) => {
           console.log('WebSocket connected');
-          // Send message to web socket saying you have joined.
+          // Fetch the users display name
           fetch('/spotify-username')
               .then(response => response.json())
               .then(data => {
                 message = data.user_name + " (owner) has joined"
+                // Send message to web socket saying you have joined.
                 socket.send(message);
               })
               .catch(error => console.error(error));
