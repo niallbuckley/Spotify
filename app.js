@@ -14,6 +14,7 @@ app.use('/', require('./routes/login'));
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
+// TODO: Add this to the controllers
 app.get('/spotify-username', (req, res) =>  {
     user = req.cookies.spotify_auth_state;
     // Read the existing data from the database
@@ -27,8 +28,6 @@ app.get('/spotify-username', (req, res) =>  {
   
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(user)) {
-            console.log("User_name: ", jsonData[user]);
-            //res.send("Hello Client");
             const data = { user_name : jsonData[user]};
             res.json(data)
         }
