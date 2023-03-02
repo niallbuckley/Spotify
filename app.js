@@ -28,12 +28,14 @@ app.get('/spotify-username', (req, res) =>  {
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(user)) {
             console.log("User_name: ", jsonData[user]);
+            //res.send("Hello Client");
+            const data = { user_name : jsonData[user]};
+            res.json(data)
         }
         else{
             console.log("Error user not found in database.")
         }
     })
-    res.send("Hello Client");
 
 })
 

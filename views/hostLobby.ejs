@@ -16,7 +16,7 @@
       </div>
       <script>
         // get displayname 
-        fetch('/spotify-username').then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
+        //fetch('/spotify-username').then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
 
         const socket = new WebSocket('ws://localhost:3000');
 
@@ -24,8 +24,15 @@
         socket.addEventListener('open', (event) => {
           console.log('WebSocket connected');
           // Send message to web socket saying you have joined.
-          message = "Owner has joined";
-          socket.send(message);
+          fetch('/spotify-username')
+              .then(response => response.json())
+              .then(data => {
+                message = data.user_name + " has joined"
+                socket.send(message);
+              })
+              .catch(error => console.error(error));
+          //message = "Owner has joined";
+          //socket.send(message);
         });
 
         // Recieved a message from the web socker
