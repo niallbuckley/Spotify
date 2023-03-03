@@ -28,7 +28,7 @@ app.get('/spotify-username', (req, res) =>  {
   
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(user)) {
-            const data = { user_name : jsonData[user]};
+            const data = { user_name : jsonData[user]["spot_user_name"]};
             res.json(data)
         }
         else{

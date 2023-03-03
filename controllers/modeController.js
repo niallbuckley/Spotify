@@ -76,7 +76,7 @@ const modeChoiceView = (req, res) => {
               // use the access token to access the Spotify Web API
               request.get(options, function(error, response, body) {
                     // Store auth cookie with the spotify display name in the database
-                    jsonData[state] = body.display_name
+                    jsonData[state] = { "spot_user_name" : body.display_name }
                     
                     // Convert the JSON data to a string
                     const jsonString = JSON.stringify(jsonData, null, 2);
