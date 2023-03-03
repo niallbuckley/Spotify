@@ -1,10 +1,11 @@
 var querystring = require('querystring');
-var stateKey = 'spotify_auth_state';
 const fs = require('fs');
 const path = require('path');
  
 // Define the filepath
 const filePath = path.join(__dirname, './../database.json');
+
+var stateKey = 'spotify_auth_state';
 
 
 const hostLobbyView = (req, res) => {
@@ -44,8 +45,12 @@ const hostLobbyView = (req, res) => {
         const WebSocket = require('ws');
 
         // const wss = new WebSocket.Server({ port: 3000, path: '/id/12345', host: 'localhost', protocol: 'ws' });
+        generateIdFile = require('./generateId');
+        var randomSting = generateIdFile();
+        console.log(randomSting);
+        const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
         
-        const wss = new WebSocket.Server({ port: 3000 });
+        //const wss = new WebSocket.Server({ port: 3000 });
         
         // keep track of connected clients
         const clients = new Set();
