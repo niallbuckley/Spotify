@@ -55,7 +55,7 @@ const hostLobbyView = (req, res) => {
         // Convert the JSON data to a string
         const jsonString = JSON.stringify(jsonData, null, 2);
 
-        // Write the updated data back to the file
+        // Write the wss to database
         fs.writeFile(filePath, jsonString, 'utf8', (err) => {
           if (err) {
             console.error(err);

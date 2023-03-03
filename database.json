@@ -2,9 +2,6 @@
   "test": "test",
   "state": "true",
   "YBmWv2QCfcZOr2rs": "true",
-  "RKclkqLtPVzyElQJ": "Gme Stocks",
-  "y686FzeRsU69s9xw": "Meat Cannon",
-  "DIW7FL3zZrkjy4NB": "Gme Stocks",
   "VjkFpGXqxCpWkq9d": {
     "spot_user_name": "Gme Stocks"
   },
@@ -29,5 +26,9 @@
   },
   "FaMSt0AD1zsczW0S": {
     "spot_user_name": "Gme Stocks"
+  },
+  "I7JLjNRNAVdxdhKm": {
+    "spot_user_name": "Gme Stocks",
+    "wss_id": "GWqQ468Deg"
   }
 }
