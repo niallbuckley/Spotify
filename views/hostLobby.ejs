@@ -30,7 +30,7 @@
                   fetch('/spotify-username')
                       .then(response => response.json())
                       .then(data => {
-                        message = data.user_name + " (owner) has joined"
+                        var message = data.user_name + " (owner) has joined"
                         // Send message to web socket saying you have joined.
                         socket.send(message);
                       })

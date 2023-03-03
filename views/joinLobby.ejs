@@ -11,38 +11,53 @@
         <h1>Join Lobby</h1>
         <p> Joining a lobby ...  </p>
       </div>
+      <div>
+        <form id="myForm">
+          <label for="name">Enter your name:</label>
+          <input type="text" id="name" name="name">
+          <button type="submit" onclick="submitForm()">Submit</button>
+        </form>
+      </div>
       <div id="messages">
         <!-- existing messages will be displayed here -->
       </div>
     </div>
     <script>
-        const socket = new WebSocket('ws://localhost:3000/id/123');
+      //const formPressed = False;
+      document.getElementById("myForm").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent the default form submission behavior
+          var name = document.getElementById("name").value;
+          // Perform some actions on the user input
+          server_url = 'ws://localhost:3000/id/' + name
+          const socket = new WebSocket(server_url);
 
-        // Open connection to the web socket sever
-        socket.addEventListener('open', (event) => {
-          console.log('WebSocket connected');
-          fetch('/spotify-username')
-              .then(response => response.json())
-              .then(data => {
-                message = data.user_name + " has joined"
-                socket.send(message);
+          // Open connection to the web socket sever
+          socket.addEventListener('open', (event) => {
+            console.log('WebSocket connected');
+            fetch('/spotify-username')
+                .then(response => response.json())
+                .then(data => {
+                  message = data.user_name + " has joined"
+                  socket.send(message);
+                })
+                .catch(error => console.error(error));
+          });
+
+          // Recieved a message from the web socket
+          socket.addEventListener('message', (event) => {
+            console.log("message received")
+            const messagesDiv = document.getElementById('messages');
+            const messageP = document.createElement('p');
+            if (event.data instanceof Blob) {
+              event.data.text().then(text => { 
+                console.log(text);
+                messageP.innerText = text;
+                messagesDiv.appendChild(messageP);
               })
-              .catch(error => console.error(error));
-        });
-
-        // Recieved a message from the web socket
-        socket.addEventListener('message', (event) => {
-          console.log("message received")
-          const messagesDiv = document.getElementById('messages');
-          const messageP = document.createElement('p');
-          if (event.data instanceof Blob) {
-            event.data.text().then(text => { 
-              console.log(text);
-              messageP.innerText = text;
-              messagesDiv.appendChild(messageP);
-            })
-          }
-        });
+            }
+          });
+      
+        })
       </script>
   </body>
 </html>
