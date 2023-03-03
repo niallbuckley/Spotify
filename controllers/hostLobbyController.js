@@ -48,7 +48,23 @@ const hostLobbyView = (req, res) => {
         generateIdFile = require('./generateId');
         var randomString = generateIdFile();
         console.log(randomString);
-        const wss = new WebSocket.Server({ port: 3000, path: '/id/' + '123', host: 'localhost', protocol: 'ws' });
+        
+        // Save id to database - this only needs to be done for the host
+        jsonData[storedState]["wss_id"] = randomString
+        
+        // Convert the JSON data to a string
+        const jsonString = JSON.stringify(jsonData, null, 2);
+
+        // Write the updated data back to the file
+        fs.writeFile(filePath, jsonString, 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log('The wss id was successfully added to the JSON data.');
+        });
+
+        const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
         
         //const wss = new WebSocket.Server({ port: 3000 });
         

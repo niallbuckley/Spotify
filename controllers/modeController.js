@@ -87,7 +87,7 @@ const modeChoiceView = (req, res) => {
                         console.error(err);
                         return;
                       }
-                      console.log('The key was successfully added to the JSON data.');
+                      console.log('The spotify username was successfully added to the JSON data.');
                     });
                 })
             }
