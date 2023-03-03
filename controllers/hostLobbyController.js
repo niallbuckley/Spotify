@@ -46,8 +46,8 @@ const hostLobbyView = (req, res) => {
 
         // const wss = new WebSocket.Server({ port: 3000, path: '/id/12345', host: 'localhost', protocol: 'ws' });
         generateIdFile = require('./generateId');
-        var randomSting = generateIdFile();
-        console.log(randomSting);
+        var randomString = generateIdFile();
+        console.log(randomString);
         const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
         
         //const wss = new WebSocket.Server({ port: 3000 });
