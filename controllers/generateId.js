@@ -1,6 +1,5 @@
-var generateRandomString = function() {
+var generateRandomString = function(length=10) {
   var text = '';
-  var length= 10;
   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   for (var i = 0; i < length; i++) {
