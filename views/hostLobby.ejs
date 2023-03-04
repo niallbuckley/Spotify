@@ -15,36 +15,45 @@
         <!-- existing messages will be displayed here -->
       </div>
       <script>
-        const socket = new WebSocket('ws://localhost:3000');
-
-        // Open connection to the web socket sever
-        socket.addEventListener('open', (event) => {
-          console.log('WebSocket connected');
           // Fetch the users display name
-          fetch('/spotify-username')
+          fetch('/web-socket-server-id')
               .then(response => response.json())
               .then(data => {
-                message = data.user_name + " (owner) has joined"
+                server_url = 'ws://localhost:3000/id/' + data.wss_id
                 // Send message to web socket saying you have joined.
+                const socket = new WebSocket(server_url);
+
+                // Open connection to the web socket sever
+                socket.addEventListener('open', (event) => {
+                  console.log('WebSocket connected');
+                  // Fetch the users display name
+                  fetch('/spotify-username')
+                      .then(response => response.json())
+                      .then(data => {
+                        var message = data.user_name + " (owner) has joined"
+                        // Send message to web socket saying you have joined.
+                        socket.send(message);
+                      })
+                      .catch(error => console.error(error));
+                });
+
+                // Recieved a message from the web socker
+                socket.addEventListener('message', (event) => {
+                  const messagesDiv = document.getElementById('messages');
+                  const messageP = document.createElement('p');
+                  if (event.data instanceof Blob) {
+                    reader = new FileReader();
+
+                    reader.onload = () => {
+                      messageP.innerText = reader.result;
+                      messagesDiv.appendChild(messageP);
+                    };
+                    reader.readAsText(event.data);
+                  }
+                });
                 socket.send(message);
               })
               .catch(error => console.error(error));
-        });
-
-        // Recieved a message from the web socker
-        socket.addEventListener('message', (event) => {
-          const messagesDiv = document.getElementById('messages');
-          const messageP = document.createElement('p');
-          if (event.data instanceof Blob) {
-            reader = new FileReader();
-
-            reader.onload = () => {
-              messageP.innerText = reader.result;
-              messagesDiv.appendChild(messageP);
-            };
-            reader.readAsText(event.data);
-          }
-        });
 
       </script>
     </div>

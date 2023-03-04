@@ -1,10 +1,11 @@
 var querystring = require('querystring');
-var stateKey = 'spotify_auth_state';
 const fs = require('fs');
 const path = require('path');
  
 // Define the filepath
 const filePath = path.join(__dirname, './../database.json');
+
+var stateKey = 'spotify_auth_state';
 
 
 const hostLobbyView = (req, res) => {
@@ -44,8 +45,28 @@ const hostLobbyView = (req, res) => {
         const WebSocket = require('ws');
 
         // const wss = new WebSocket.Server({ port: 3000, path: '/id/12345', host: 'localhost', protocol: 'ws' });
+        generateIdFile = require('./generateId');
+        var randomString = generateIdFile();
+        console.log(randomString);
         
-        const wss = new WebSocket.Server({ port: 3000 });
+        // Save id to database - this only needs to be done for the host
+        jsonData[storedState]["wss_id"] = randomString
+        
+        // Convert the JSON data to a string
+        const jsonString = JSON.stringify(jsonData, null, 2);
+
+        // Write the wss to database
+        fs.writeFile(filePath, jsonString, 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log('The wss id was successfully added to the JSON data.');
+        });
+
+        const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
+        
+        //const wss = new WebSocket.Server({ port: 3000 });
         
         // keep track of connected clients
         const clients = new Set();

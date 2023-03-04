@@ -76,7 +76,8 @@ const modeChoiceView = (req, res) => {
               // use the access token to access the Spotify Web API
               request.get(options, function(error, response, body) {
                     // Store auth cookie with the spotify display name in the database
-                    jsonData[state] = body.display_name
+                    // This is the first instance in the data base the state has not been added yet --> maybe to do add state before this point
+                    jsonData[state] = { "spot_user_name" : body.display_name }
                     
                     // Convert the JSON data to a string
                     const jsonString = JSON.stringify(jsonData, null, 2);
@@ -87,7 +88,7 @@ const modeChoiceView = (req, res) => {
                         console.error(err);
                         return;
                       }
-                      console.log('The key was successfully added to the JSON data.');
+                      console.log('The spotify username was successfully added to the JSON data.');
                     });
                 })
             }
