@@ -4,6 +4,4 @@ const loginView = (req, res) => {
     });
 }
 
-module.exports = {
-    loginView
-}
+module.exports = loginView;
