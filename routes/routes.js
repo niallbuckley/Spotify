@@ -18,3 +18,7 @@ module.exports = router;
 const getUserSpotifyUserName = require('../controllers/spotifyUsername');
 router.get('/spotify-username', function(req, res){ getUserSpotifyUserName(req, res); });
 module.exports = router;
+
+const getwssId = require('../controllers/wssId');
+router.get('/web-socket-server-id', function(req, res){ getwssId(req,res); });
+module.exports = router;
