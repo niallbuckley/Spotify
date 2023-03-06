@@ -10,7 +10,6 @@ app.set('view engine', 'ejs');
 app.use('/', require('./routes/login'));
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
-app.use('/', require('./controllers/spotifyUsername'));
 app.use('/', require('./controllers/wssId'));
 
 const PORT = process.env.PORT || 4111;

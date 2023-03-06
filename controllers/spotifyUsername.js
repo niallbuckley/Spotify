@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.join(__dirname, '.././database.json');
 
-module.exports = app.get('/spotify-username', (req, res) =>  {
+var getUserSpotifyUserName = function(req, res)  {
+    console.log('called!')
     user = req.cookies.spotify_auth_state;
     // Read the existing data from the database
     fs.readFile(filePath, 'utf8', (err, data) => {
@@ -20,10 +21,12 @@ module.exports = app.get('/spotify-username', (req, res) =>  {
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(user)) {
             const data = { user_name : jsonData[user]["spot_user_name"]};
-            res.json(data)
+            return res.json(data)
         }
         else{
             console.log("Error user not found in database.")
         }
     })
-})
+};
+
+module.exports = getUserSpotifyUserName;

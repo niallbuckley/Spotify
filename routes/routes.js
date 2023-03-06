@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const app = express();
 
 
 const modeChoiceView = require('../controllers/modeController');
@@ -12,4 +13,8 @@ module.exports = router;
 
 const joinLobbyView = require('../controllers/joinLobbyController');
 router.get('/join-lobby', joinLobbyView);
+module.exports = router;
+
+const getUserSpotifyUserName = require('../controllers/spotifyUsername');
+router.get('/spotify-username', function(req, res){ getUserSpotifyUserName(req, res); });
 module.exports = router;
