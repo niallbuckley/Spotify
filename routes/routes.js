@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const app = express();
 
+const loginView = require('../controllers/loginController');
+router.get('/login', loginView);
+module.exports = router;
 
 const modeChoiceView = require('../controllers/modeController');
 router.get('/mode', modeChoiceView);
