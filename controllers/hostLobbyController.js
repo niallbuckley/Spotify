@@ -66,8 +66,6 @@ const hostLobbyView = (req, res) => {
 
         const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
         
-        //const wss = new WebSocket.Server({ port: 3000 });
-        
         // keep track of connected clients
         const clients = new Set();
         // keep track of messages sent
