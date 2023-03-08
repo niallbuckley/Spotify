@@ -43,7 +43,7 @@
                 .catch(error => console.error(error));
           });
 
-          // Recieved a message from the web socket
+          // Received a message from the web socket
           socket.addEventListener('message', (event) => {
             console.log("message received")
             const messagesDiv = document.getElementById('messages');

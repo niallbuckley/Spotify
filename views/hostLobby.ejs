@@ -14,6 +14,9 @@
       <div id="messages">
         <!-- existing messages will be displayed here -->
       </div>
+      <div>
+      <button onclick="getPlaylist()">Click when ready</button>
+      </div>
       <script>
           // Fetch the users display name
           fetch('/web-socket-server-id')
@@ -54,6 +57,11 @@
                 socket.send(message);
               })
               .catch(error => console.error(error));
+            
+          function  getPlaylist(){
+            // send get request
+            console.log("pass");
+          }
 
       </script>
     </div>

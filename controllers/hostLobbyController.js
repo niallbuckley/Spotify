@@ -44,7 +44,6 @@ const hostLobbyView = (req, res) => {
         console.log("create a new web socket")
         const WebSocket = require('ws');
 
-        // const wss = new WebSocket.Server({ port: 3000, path: '/id/12345', host: 'localhost', protocol: 'ws' });
         generateIdFile = require('./generateId');
         var randomString = generateIdFile();
         console.log(randomString);
