@@ -18,7 +18,7 @@
       <button onclick="getPlaylist()">Click when ready</button>
       </div>
       <script>
-          // Fetch the users display name
+          // Connect to web socket running on server
           fetch('/web-socket-server-id')
               .then(response => response.json())
               .then(data => {
