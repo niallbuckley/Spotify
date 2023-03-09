@@ -10,13 +10,45 @@ app.set('view engine', 'ejs');
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
+const fs = require('fs');
+const path = require('path');
+
+
+
+const filePath = path.join(__dirname, './playlist-database.json');
+var stateKey = 'spotify_auth_state';
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.post('/group-playlist', (req, res)  => {
     // create endpoint /group-playlist/<id>
-    const playListId = req.body.playListId
-    // create instance in playlist database with { playListId : None } to start.
-})
+    
+    const playListId = req.body.playListId;
 
+    const storedState = req.cookies ? req.cookies[stateKey] : null;
+    // create instance in playlist database with { playListId : None } to start.
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        let jsonData = JSON.parse(data);
+        jsonData[playListId] =  { [storedState]: [] }
+        const jsonString = JSON.stringify(jsonData, null, 2);
+
+        // Write the updated data back to the file
+        fs.writeFile(filePath, jsonString, 'utf8', (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log('Playlist was stored in database');
+        });
+    });
+});
+/*
 app.put('/group-playlist/:id', (req, res)  => {
     // update endpoint /group-playlist/<id>
     const { playListId, userState } = req.body
@@ -37,6 +69,6 @@ app.get('/group-playlist/:id', (req,res) => {
     // return playlist
 
 })
-
+*/
 const PORT = process.env.PORT || 4111;
 app.listen(PORT, console.log("Server listening on port: " + PORT));
