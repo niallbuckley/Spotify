@@ -78,6 +78,7 @@ const modeChoiceView = (req, res) => {
                     // Store auth cookie with the spotify display name in the database
                     // This is the first instance in the data base the state has not been added yet --> maybe to do add state before this point
                     jsonData[state] = { "spot_user_name" : body.display_name }
+                    jsonData[state]["spot_a_t"] = access_token;
                     
                     // Convert the JSON data to a string
                     const jsonString = JSON.stringify(jsonData, null, 2);
