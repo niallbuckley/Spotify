@@ -12,10 +12,10 @@ app.use('/', require('./routes/routes'));
 
 const fs = require('fs');
 const path = require('path');
+const request = require('request'); 
 
-
-
-const filePath = path.join(__dirname, './playlist-database.json');
+const playlistDatabase = path.join(__dirname, './playlist-database.json');
+const userDatabase = path.join(__dirname, './database.json');
 var stateKey = 'spotify_auth_state';
 const bodyParser = require('body-parser');
 
@@ -24,12 +24,12 @@ app.use(bodyParser.json());
 
 app.post('/group-playlist', (req, res)  => {
     // create endpoint /group-playlist/<id>
-    
+
     const playListId = req.body.playListId;
 
     const storedState = req.cookies ? req.cookies[stateKey] : null;
     // create instance in playlist database with { playListId : None } to start.
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(playlistDatabase, 'utf8', (err, data) => {
         if (err) {
           console.error(err);
           return;
@@ -39,7 +39,39 @@ app.post('/group-playlist', (req, res)  => {
         const jsonString = JSON.stringify(jsonData, null, 2);
 
         // Write the updated data back to the file
-        fs.writeFile(filePath, jsonString, 'utf8', (err) => {
+        fs.writeFile(playlistDatabase, jsonString, 'utf8', (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log('Playlist was stored in database');
+        });
+    });
+    fs.readFile(userDatabase, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        let jsonData = JSON.parse(data);
+        
+        // use the access token to access the Spotify Web API
+        var access_token = jsonData[storedState].spot_a_t;
+        var options = {
+            url: 'https://api.spotify.com/v1/me/top/tracks',
+            headers: { 'Authorization': 'Bearer ' + access_token },
+            json: true
+        };
+
+        // make GET request to spotify to get the users top artists
+        request.get(options, function(error, response, body) {
+            console.log(body);
+        });
+        
+
+        const jsonString = JSON.stringify(jsonData, null, 2);
+
+        // Write the updated data back to the file
+        fs.writeFile(playlistDatabase, jsonString, 'utf8', (err) => {
         if (err) {
             console.error(err);
             return;
