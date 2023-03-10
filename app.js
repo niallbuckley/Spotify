@@ -10,12 +10,12 @@ app.set('view engine', 'ejs');
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
+
+// TODO: clean up
 const fs = require('fs');
 const path = require('path');
-const request = require('request'); 
 
 const playlistDatabase = path.join(__dirname, './playlist-database.json');
-const userDatabase = path.join(__dirname, './database.json');
 var stateKey = 'spotify_auth_state';
 const bodyParser = require('body-parser');
 const updatePlaylist = require('./controllers/update-playlist');
@@ -36,7 +36,8 @@ app.post('/group-playlist', (req, res)  => {
           return;
         }
         let jsonData = JSON.parse(data);
-        jsonData[playListId] =  { [storedState]: [] }
+
+        jsonData[playListId] = {}
         const jsonString = JSON.stringify(jsonData, null, 2);
 
         // Write the updated data back to the file
