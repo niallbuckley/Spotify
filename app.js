@@ -64,20 +64,15 @@ app.post('/group-playlist', (req, res)  => {
 
         // make GET request to spotify to get the users top artists
         request.get(options, function(error, response, body) {
-            console.log(body);
+            console.log(body.items[0].uri);
+            for (let i=0; i<body.items.length; i++){
+                console.log(body.items[i].uri);
+            }
+
+            const jsonString = JSON.stringify(jsonData, null, 2);
+
         });
         
-
-        const jsonString = JSON.stringify(jsonData, null, 2);
-
-        // Write the updated data back to the file
-        fs.writeFile(playlistDatabase, jsonString, 'utf8', (err) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        console.log('Playlist was stored in database');
-        });
     });
 });
 /*
