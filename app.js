@@ -53,18 +53,17 @@ app.post('/group-playlist', (req, res)  => {
    updatePlaylist(storedState,playListId);
 
 });
-/*
+
 app.put('/group-playlist/:id', (req, res)  => {
     // update endpoint /group-playlist/<id>
-    const { playListId, userState } = req.body
+    const playListId = req.body.playListId;
 
-    // Open user database and get access token
-    
-    // Fetch spotify for most popular songs
-    
-    // Add users most popular songs to playlist database like this: {playListId : {userState : [song list] }}
+    const storedState = req.cookies ? req.cookies[stateKey] : null;
+
+    updatePlaylist(storedState,playListId);
 })
 
+/*
 app.get('/group-playlist/:id', (req,res) => {
     // this will be set to All the party members once the host presses ready.
     const playListId = req.params.playListId
