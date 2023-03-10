@@ -18,6 +18,7 @@ const playlistDatabase = path.join(__dirname, './playlist-database.json');
 const userDatabase = path.join(__dirname, './database.json');
 var stateKey = 'spotify_auth_state';
 const bodyParser = require('body-parser');
+const updatePlaylist = require('./controllers/update-playlist');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -47,45 +48,10 @@ app.post('/group-playlist', (req, res)  => {
         console.log('Playlist instance was stored in database');
         });
     });
-    fs.readFile(userDatabase, 'utf8', (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        let jsonData = JSON.parse(data);
-        
-        // use the access token to access the Spotify Web API
-        var access_token = jsonData[storedState].spot_a_t;
-        var options = {
-            url: 'https://api.spotify.com/v1/me/top/tracks',
-            headers: { 'Authorization': 'Bearer ' + access_token },
-            json: true
-        };
-        fs.readFile(playlistDatabase, 'utf8', (err, data) => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-            let playlistJsonData = JSON.parse(data);
-            // GET request to spotify to get the users top tracks
-            request.get(options, function(error, response, body) {
-                for (let i=0; i<body.items.length; i++){
-                    playlistJsonData[playListId][storedState].push(body.items[i].uri);
-                }
+    
+    // PUT '/group-playlist/:id'
+   updatePlaylist(storedState,playListId);
 
-                const jsonString = JSON.stringify(playlistJsonData, null, 2);
-
-                // Write the updated data back to the file
-                fs.writeFile(playlistDatabase, jsonString, 'utf8', (err) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log('Playlist: user songs were stored in database');
-                });
-            });
-        });
-    });
 });
 /*
 app.put('/group-playlist/:id', (req, res)  => {
