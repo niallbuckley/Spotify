@@ -44,7 +44,7 @@ app.post('/group-playlist', (req, res)  => {
             console.error(err);
             return;
         }
-        console.log('Playlist was stored in database');
+        console.log('Playlist instance was stored in database');
         });
     });
     fs.readFile(userDatabase, 'utf8', (err, data) => {
@@ -61,18 +61,30 @@ app.post('/group-playlist', (req, res)  => {
             headers: { 'Authorization': 'Bearer ' + access_token },
             json: true
         };
-
-        // make GET request to spotify to get the users top artists
-        request.get(options, function(error, response, body) {
-            console.log(body.items[0].uri);
-            for (let i=0; i<body.items.length; i++){
-                console.log(body.items[i].uri);
+        fs.readFile(playlistDatabase, 'utf8', (err, data) => {
+            if (err) {
+              console.error(err);
+              return;
             }
+            let playlistJsonData = JSON.parse(data);
+            // GET request to spotify to get the users top tracks
+            request.get(options, function(error, response, body) {
+                for (let i=0; i<body.items.length; i++){
+                    playlistJsonData[playListId][storedState].push(body.items[i].uri);
+                }
 
-            const jsonString = JSON.stringify(jsonData, null, 2);
+                const jsonString = JSON.stringify(playlistJsonData, null, 2);
 
+                // Write the updated data back to the file
+                fs.writeFile(playlistDatabase, jsonString, 'utf8', (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log('Playlist: user songs were stored in database');
+                });
+            });
         });
-        
     });
 });
 /*
