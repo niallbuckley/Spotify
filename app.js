@@ -54,7 +54,7 @@ app.post('/group-playlist', (req, res)  => {
 
 });
 
-app.put('/group-playlist/:id', (req, res)  => {
+app.put('/group-playlist', (req, res)  => {
     // update endpoint /group-playlist/<id>
     const playListId = req.body.playListId;
 
