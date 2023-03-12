@@ -27,6 +27,8 @@
       document.getElementById("myForm").addEventListener("submit", function(event) {
           event.preventDefault(); // Prevent the default form submission behavior
           var name = document.getElementById("name").value;
+
+          // Update playlist with user tracks
           fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": name})})
                 .then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
           
