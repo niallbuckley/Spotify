@@ -4,7 +4,7 @@ const path = require('path');
 
 const playlistDatabase = path.join(__dirname, '.././playlist-database.json');
 var stateKey = 'spotify_auth_state';
-const bodyParser = require('body-parser');
+
 const updatePlaylist = require('./update-playlist');
 
 //app.use(bodyParser.urlencoded({ extended: true }));
