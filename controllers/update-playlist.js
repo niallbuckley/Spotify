@@ -31,7 +31,8 @@ var updatePlaylist = function(userState, playListId){
                 // GET request to spotify to get the users top tracks
                 request.get(options, function(error, response, body) {
 
-                    playlistJsonData[playListId][userState] = []
+                    // Refresh user tracks even if they already exist in database
+                    playlistJsonData[playListId] = {[userState] : []};
 
                     for (let i=0; i<body.items.length; i++){
                         playlistJsonData[playListId][userState].push(body.items[i].uri);
