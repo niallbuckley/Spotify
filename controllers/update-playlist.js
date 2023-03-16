@@ -34,7 +34,10 @@ var updatePlaylist = function(userState, playListId){
                     // Refresh user tracks even if they already exist in database
                     
                     // TODO: fix this
-                    playlistJsonData[playListId] = {[userState] : []};
+                    //playlistJsonData[playListId] = {[userState] : []};
+                    if (!( userState in playlistJsonData[playListId])) {
+                        playlistJsonData[playListId][userState] = []
+                    }
 
                     for (let i=0; i<body.items.length; i++){
                         playlistJsonData[playListId][userState].push(body.items[i].uri);
