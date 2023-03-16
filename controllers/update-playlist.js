@@ -32,6 +32,7 @@ var updatePlaylist = function(userState, playListId){
                 request.get(options, function(error, response, body) {
 
                     // Refresh user tracks even if they already exist in database
+                    
                     // TODO: fix this
                     playlistJsonData[playListId] = {[userState] : []};
 

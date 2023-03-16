@@ -3,7 +3,7 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
-// set that all templates are located in `/views` directory
+// set all templates location to `/views` directory
 app.set('views', __dirname + '/views');
 
 app.set('view engine', 'ejs');
@@ -14,15 +14,6 @@ app.use(bodyParser.json());
 app.use('/', require('./controllers/loginSpotifyController'));
 app.use('/', require('./routes/routes'));
 
-
-app.put('/group-playlist', (req, res)  => {
-    // update endpoint /group-playlist Body:id
-    const playListId = req.body.playListId;
-
-    const storedState = req.cookies ? req.cookies[stateKey] : null;
-
-    updatePlaylist(storedState,playListId);
-})
 
 /*
 app.get('/group-playlist/:id', (req,res) => {

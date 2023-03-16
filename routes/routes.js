@@ -10,6 +10,7 @@ const getwssId = require('../controllers/wssId');
 const createHostPlaylist = require('../controllers/createHostPlaylist');
 const updateJoinPlaylist = require('../controllers/updateJoinPlaylist');
 
+// Web Pages
 router.get('/login', loginView);
 router.get('/mode', modeChoiceView);
 router.get('/host-lobby', hostLobbyView);
