@@ -25,7 +25,9 @@ var updatePlaylist = function(userState, playListId){
                 headers: { 'Authorization': 'Bearer ' + access_token },
                 json: true
             };
+            console.log("Update called  4");
             fs.readFile(playlistDatabase, 'utf8', (err, data) => {
+                console.log("Update called  5");
                 if (err) {
                 console.error(err);
                 return;

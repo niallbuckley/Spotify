@@ -8,7 +8,7 @@ var stateKey = 'spotify_auth_state';
 const updatePlaylist = require('./update-playlist');
 
 
-var createHostPlaylist = function(req, res)  { 
+var createHostPlaylist = function(req, res)  {
     // create endpoint /group-playlist/<id>
     console.log("playlist id? ", req.body.playListId);
     const playListId = req.body.playListId;
@@ -32,11 +32,10 @@ var createHostPlaylist = function(req, res)  {
             return;
         }
         console.log('Playlist instance was stored in database');
+        updatePlaylist(storedState,playListId);
         });
     });
-    // PUT '/group-playlist Body:id'
-    updatePlaylist(storedState,playListId);
-    //return "None";
+    // This is done in parallel with the create playlist --> possibly an issue!
     return res.json({"data": "Testing"});
 };
 
