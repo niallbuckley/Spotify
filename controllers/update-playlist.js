@@ -7,14 +7,18 @@ const playlistDatabase = path.join(__dirname, '.././playlist-database.json');
 const userDatabase = path.join(__dirname, '.././database.json');
 
 var updatePlaylist = function(userState, playListId){
+    console.log("Update called  1");
+    // Also this line
     fs.readFile(userDatabase, 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
                 return;
             }
+            console.log("Update called  2");
             let jsonData = JSON.parse(data);
             
             // use the access token to access the Spotify Web API
+            console.log("Update called  3");
             var access_token = jsonData[userState].spot_a_t;
             var options = {
                 url: 'https://api.spotify.com/v1/me/top/tracks',
