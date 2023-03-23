@@ -8,7 +8,7 @@ var getPlaylist = function(req, res)  {
     const playListId = req.params.playListId;
 
     console.log("WooHoo: ", playListId);
-    return {"playlist": "Test"};
+    return res.json({"getPlaylist": "Testing"});
 
 };
 
