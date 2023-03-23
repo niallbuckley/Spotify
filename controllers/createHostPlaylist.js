@@ -7,12 +7,10 @@ var stateKey = 'spotify_auth_state';
 
 const updatePlaylist = require('./update-playlist');
 
-//app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.json());
 
-var createHostPlaylist = function(req, res)  { 
+var createHostPlaylist = function(req, res)  {
     // create endpoint /group-playlist/<id>
-    console.log("Hello? ", req.body.playListId);
+    console.log("playlist id? ", req.body.playListId);
     const playListId = req.body.playListId;
 
     const storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -34,10 +32,11 @@ var createHostPlaylist = function(req, res)  {
             return;
         }
         console.log('Playlist instance was stored in database');
+        updatePlaylist(storedState,playListId);
         });
     });
-    // PUT '/group-playlist Body:id'
-    updatePlaylist(storedState,playListId);
+    // This is done in parallel with the create playlist --> possibly an issue!
+    return res.json({"data": "Testing"});
 };
 
 module.exports = createHostPlaylist;
