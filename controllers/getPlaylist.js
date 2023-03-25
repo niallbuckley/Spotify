@@ -39,22 +39,37 @@ var getPlaylist = function(req, res)  {
         
         // create the playlist (hit spotify API)
         const storedState = req.cookies ? req.cookies[stateKey] : null;
-        fs.readFile(playlistDatabase, 'utf8', (err, data) => {
+        fs.readFile(userDatabase, 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
                 return;
             }
-            let jsonData = JSON.parse(data);
+            let userJsonData = JSON.parse(data);
             
             // use the access token to access the Spotify Web API
-            var access_token = jsonData[storedState].spot_a_t;
+            var access_token = userJsonData[storedState].spot_a_t;
+            var user_id = userJsonData[storedState].spot_id;
+            console.log (user_id, access_token);
+            var myBody = {
+                "name": "Playlist Deli",
+                "description": "New playlist description",
+                "public": true
+              };
             var options = {
-                url: 'https://api.spotify.com/v1/me/top/tracks',
+                url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists',
                 headers: { 'Authorization': 'Bearer ' + access_token },
-                json: true
+                json: true,
+                body: myBody
             };
+            // create playlist
             request.post(options, function(error, response, body) {
-                // create playlist
+                if (error) {
+                    console.error(error);
+                  
+                } 
+                else {
+                    console.log(body);
+                  }
             });
         })
 
