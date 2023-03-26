@@ -19,7 +19,7 @@ module.exports = app.get('/login-spotify', function(req, res) {
   res.cookie(stateKey, state);
 
   // application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read';
+  var scope = 'user-read-private user-read-email user-top-read playlist-modify-private playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
