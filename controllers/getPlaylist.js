@@ -67,9 +67,21 @@ var getPlaylist = function(req, res)  {
                     console.error(error);
                   
                 } 
-                else {
-                    console.log(body);
-                  }
+                console.log(body.id);
+                var options = {
+                    url: 'https://api.spotify.com/v1/playlists/' + body.id + '/tracks',
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true,
+                    body: playlist
+                };
+                request.post(options, function(error, response, body) {
+                    if (error) {
+                        console.error(error);
+                        
+                    } 
+
+                    
+                })
             });
         })
 
