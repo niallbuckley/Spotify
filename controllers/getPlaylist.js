@@ -10,7 +10,6 @@ var stateKey = 'spotify_auth_state';
 var getPlaylist = function(req, res)  {
     const playListId = req.params.id;
 
-    console.log("WooHoo: ", playListId);
     fs.readFile(playlistDatabase, 'utf8', (err, data) => {
         if (err) {
           console.error(err);
@@ -50,8 +49,8 @@ var getPlaylist = function(req, res)  {
             // use the access token to access the Spotify Web API
             var access_token = userJsonData[storedState].spot_a_t;
             var user_id = userJsonData[storedState].spot_id;
-            console.log (user_id, access_token);
             const now = new Date();
+            
             var myBody = {
                 "name": "Playlist Deli " + now.toISOString(),
                 "description": "New playlist description",
