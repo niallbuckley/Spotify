@@ -51,8 +51,9 @@ var getPlaylist = function(req, res)  {
             var access_token = userJsonData[storedState].spot_a_t;
             var user_id = userJsonData[storedState].spot_id;
             console.log (user_id, access_token);
+            const now = new Date();
             var myBody = {
-                "name": "Playlist Deli",
+                "name": "Playlist Deli " + now.toISOString(),
                 "description": "New playlist description",
                 "public": true
               };
