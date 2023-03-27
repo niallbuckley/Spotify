@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const request = require('request');
+const lodash = require('lodash');
 
 const playlistDatabase = path.join(__dirname, '.././playlist-database.json');
 const userDatabase = path.join(__dirname, '.././database.json');
@@ -22,7 +23,7 @@ var getPlaylist = function(req, res)  {
             return res.json({"ERROR": "Playlist ID not found in database"})
         }
         console.log("Users: ", Object.keys(jsonData[playListId]).length);
-        const playlist = [];
+        var playlist = [];
         // For time being make playlist with only 20 tracks.
         users_in_session =  Object.keys(jsonData[playListId]).length;
         num_songs_per_user = 20/users_in_session;
@@ -61,6 +62,7 @@ var getPlaylist = function(req, res)  {
                 json: true,
                 body: myBody
             };
+            playlist = lodash.shuffle(playlist);
             // create playlist
             request.post(options, function(error, response, body) {
                 if (error) {
@@ -74,20 +76,16 @@ var getPlaylist = function(req, res)  {
                     json: true,
                     body: playlist
                 };
+                // post the songs to the created playlist.
                 request.post(options, function(error, response, body) {
                     if (error) {
                         console.error(error);
                         
                     } 
-
                     
                 })
             });
         })
-
-
-
-        // send the playlist to people or host or summin
     })
     return res.json({"getPlaylist": "Testing"});
 
