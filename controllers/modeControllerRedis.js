@@ -50,18 +50,6 @@ const modeChoiceView = (req, res) => {
           host: '127.0.0.1',
           port: '6379'
         });
-        (async () => {
-          client.on("error", (error) => console.error(`Error : ${error}`));
-        
-          await client.connect();
-          console.log("executed When?");
-          const reply1 = await client.set('name', 'Hendo');
-          console.log(reply1);
-          const reply2 = await client.get('name');
-          console.log(reply2);
-        })();
-        // set a key-value pair
-        console.log("executed second!")
   
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(state)) {
@@ -97,23 +85,20 @@ const modeChoiceView = (req, res) => {
               request.get(options, function(error, response, body) {
                     // Store auth cookie with the spotify display name in the database
                     // This is the first instance in the data base the state has not been added yet --> maybe to do add state before this point
-                    jsonData[state] = { "spot_user_name" : body.display_name }
-                    jsonData[state]["spot_a_t"] = access_token;
-                    jsonData[state]["spot_id"] = body.id;
+                    jData = {}
+                    jData["spot_user_name"] = body.display_name
+                    jData["spot_a_t"] = access_token;
+                    jData["spot_id"] = body.id;
 
+                    (async () => {
+                      client.on("error", (error) => console.error(`Error : ${error}`));
                     
-                    // Convert the JSON data to a string
-                    const jsonString = JSON.stringify(jsonData, null, 2);
-
-                    // Write the updated data back to the file
-                    fs.writeFile(filePath, jsonString, 'utf8', (err) => {
-                      if (err) {
-                        console.error(err);
-                        return;
-                      }
+                      await client.connect();
+                      const reply1 = await client.set(state, JSON.stringify(jData));
+                      const reply2 = await client.get(state);
+                      console.log(JSON.parse(reply2));
                       console.timeEnd();
-                      console.log('The spotify username was successfully added to the JSON data.P');
-                    });
+                    })();
                 })
             }
             else{  console.log("ERROR ",response.body) }
