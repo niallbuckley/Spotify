@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const loginView = require('../controllers/loginController');
-const modeChoiceView = require('../controllers/modeController');
+const modeChoiceView = require('../controllers/modeControllerRedis');
 const hostLobbyView = require('../controllers/hostLobbyController');
 const joinLobbyView = require('../controllers/joinLobbyController');
 const getUserSpotifyUserName = require('../controllers/spotifyUsername');
