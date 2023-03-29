@@ -50,29 +50,18 @@ const modeChoiceView = (req, res) => {
           host: '127.0.0.1',
           port: '6379'
         });
-        client.connect();
-        client.on('error', err => console.log('Redis Client Error', err));
-        client.on('connect', () => {
-          console.log('Connected!');
-          client.set('mykey', 'myvalue', (err, result) => {
-            console.log("hereeee");
-            if (err) {
-              console.error(err);
-            } else {
-              console.log('Set result:', result);
-              client.get('mykey', (err, result) => {
-                if (err) {
-                  console.error(err);
-                } else {
-                  console.log('Get result:', result);
-                  client.quit();
-                }
-              });
-            }
-          });
-        });
+        (async () => {
+          client.on("error", (error) => console.error(`Error : ${error}`));
+        
+          await client.connect();
+          console.log("executed When?");
+          const reply1 = await client.set('name', 'Hendo');
+          console.log(reply1);
+          const reply2 = await client.get('name');
+          console.log(reply2);
+        })();
         // set a key-value pair
-        console.log("executed first!")
+        console.log("executed second!")
   
         // Check if the key exists in the JSON data
         if (jsonData.hasOwnProperty(state)) {
