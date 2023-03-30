@@ -85,18 +85,13 @@ const modeChoiceView = (req, res) => {
               request.get(options, function(error, response, body) {
                     // Store auth cookie with the spotify display name in the database
                     // This is the first instance in the data base the state has not been added yet --> maybe to do add state before this point
-                    jData = {}
-                    jData["spot_user_name"] = body.display_name
-                    jData["spot_a_t"] = access_token;
-                    jData["spot_id"] = body.id;
+                    jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
 
                     (async () => {
                       client.on("error", (error) => console.error(`Error : ${error}`));
                     
                       await client.connect();
-                      const reply1 = await client.set(state, JSON.stringify(jData));
-                      const reply2 = await client.get(state);
-                      console.log(JSON.parse(reply2));
+                      await client.set(state, JSON.stringify(jData));
                       console.timeEnd();
                     })();
                 })
