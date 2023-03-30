@@ -83,14 +83,14 @@ const modeChoiceView = (req, res) => {
               };
               // use the access token to access the Spotify Web API
               request.get(options, function(error, response, body) {
-                    // Store auth cookie with the spotify display name in the database
-                    // This is the first instance in the data base the state has not been added yet --> maybe to do add state before this point
+                    // spotify id, spotify display name, and spotify access token in the database
                     jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
 
                     (async () => {
                       client.on("error", (error) => console.error(`Error : ${error}`));
                     
                       await client.connect();
+                      // Set the auth key as the key for the personal database
                       await client.set(state, JSON.stringify(jData));
                       console.timeEnd();
                     })();
