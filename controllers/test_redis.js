@@ -4,14 +4,14 @@ var redis = require("redis"),
 client.on("error", function (err) {
     console.log("Error " + err);
 });
-
-client.set("string key", "string val", redis.print);
-client.hset("hash key", "hashtest 1", "some value", redis.print);
-client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-client.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    client.quit();
-});
+(async () => {
+    client.on("error", (error) => console.error(`Error : ${error}`));
+  
+    await client.connect();
+    // Set the auth key as the key for the personal database
+    //await client.set(state, JSON.stringify(jData));
+    await client.set("string key", "string val");
+    await client.hSet("hashkey", "hashtest 1", "some value");
+    await client.hSet("hashkey", "hashtest 2", "some value2");
+    client.quit()
+  })();
