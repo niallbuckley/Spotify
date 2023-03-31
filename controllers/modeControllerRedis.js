@@ -19,75 +19,74 @@ const client = redis.createClient({
   port: '6379'
 });
 
-const modeChoiceView = (req, res) => {
-    console.time();
-    var code = req.query.code || null;
-    var state = req.query.state || null;
-    var stateInDatabase = false;
-    // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
-    var storedState = req.cookies ? req.cookies[stateKey] : null;
+const modeChoiceView = async(req, res) => {
+  
+  console.time();
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+  var stateInDatabase = false;
+  // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
+  var storedState = req.cookies ? req.cookies[stateKey] : null;
 
-    (async () => {
-      client.on("error", (error) => console.error(`Error : ${error}`));
-    
-      await client.connect();
-      var res = await client.hExists('users', state);
-      if (res) {
-        console.log('Field exists!');
-        stateInDatabase = true;
-      } 
-    })();
-    
+  client.on("error", (error) => console.error(`Error : ${error}`));
+  
+  await client.connect();
+  var r = await client.hExists('users', state);
+  if (r) {
+    console.log('Field exists!');
+    stateInDatabase = true;
+  } 
+  else{
+    console.log("here1");
+  }
+  console.log("here2");
 
-    if ((state === null || state !== storedState) === true && stateInDatabase === false) {
-        console.log("REDIRECT");
-        res.redirect('/#' +
-           querystring.stringify({
-              error: 'state_mismatch'
-           }));
-      }
-    else {  
-        // If the key does not exist, add it to the database Along with spotify display name
-          
-        var authOptions = {
-          url: 'https://accounts.spotify.com/api/token',
-          form: {
-            code: code,
-            grant_type: 'authorization_code',
-            redirect_uri: redirect_uri
-          },
-          headers: {
-            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-          },
-          json: true
-        };
-      
-        request.post(authOptions, function(error, response, body) {
-          if (!error && response.statusCode === 200) {
-        
-            var access_token = body.access_token;
-
-            var options = {
-              url: 'https://api.spotify.com/v1/me',
-              headers: { 'Authorization': 'Bearer ' + access_token },
-              json: true
-            };
-            // use the access token to access the Spotify Web API
-            request.get(options, function(error, response, body) {
-                  // spotify id, spotify display name, and spotify access token in the database
-                  jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
-
-                  (async () => {
-                    await client.hSet('users', state, JSON.stringify(jData));
-                    console.timeEnd();
-                  })();
-              })
-          }
-          else{  console.log("ERROR ",response.body) }
-        })
-      // This is looking at views diretory 
-      return res.render("mode", {}); 
+  if ((state === null || state !== storedState) === true && stateInDatabase === false) {
+      console.log("REDIRECT");
+      res.redirect('/#' +
+          querystring.stringify({
+            error: 'state_mismatch'
+          }));
     }
+  else {  
+      // If the key does not exist, add it to the database Along with spotify display name
+        
+      var authOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        form: {
+          code: code,
+          grant_type: 'authorization_code',
+          redirect_uri: redirect_uri
+        },
+        headers: {
+          'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        },
+        json: true
+      };
+    
+      request.post(authOptions, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+      
+          var access_token = body.access_token;
+
+          var options = {
+            url: 'https://api.spotify.com/v1/me',
+            headers: { 'Authorization': 'Bearer ' + access_token },
+            json: true
+          };
+          // use the access token to access the Spotify Web API
+          request.get(options, function(error, response, body) {
+                // spotify id, spotify display name, and spotify access token in the database
+                jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
+
+                client.hSet('users', state, JSON.stringify(jData));
+                console.timeEnd();
+            })
+        }
+        else{  console.log("ERROR ",response.body) }
+      })
+      return res.render("mode", {}); 
+  }
 }
 
 module.exports = modeChoiceView;
