@@ -91,7 +91,7 @@ const modeChoiceView = (req, res) => {
                     
                       await client.connect();
                       // Set the auth key as the key for the personal database
-                      await client.set(state, JSON.stringify(jData));
+                      await client.hSet('users', state, JSON.stringify(jData));
                       console.timeEnd();
                     })();
                 })
