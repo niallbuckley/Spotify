@@ -32,13 +32,12 @@ const modeChoiceView = (req, res) => {
     
       await client.connect();
       var res = await client.hExists('users', state);
-      if (res === 1) {
+      if (res) {
         console.log('Field exists!');
         stateInDatabase = true;
-      } else {
-        console.log('Field does not exist!');
-      }
+      } 
     })();
+    
 
     if ((state === null || state !== storedState) === true && stateInDatabase === false) {
         console.log("REDIRECT");
