@@ -13,5 +13,13 @@ client.on("error", function (err) {
     await client.set("string key", "string val");
     await client.hSet("hashkey", "hashtest 1", "some value");
     await client.hSet("hashkey", "hashtest 2", "some value2");
-    client.quit()
+    //client.quit();
+  })();
+
+(async () => {
+    // Set the auth key as the key for the personal database
+    //await client.set(state, JSON.stringify(jData));
+    var res = await client.hExists("hashkey", "Bogus");
+    console.log("result: ", res);
+    //client.quit();
   })();

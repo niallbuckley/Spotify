@@ -13,6 +13,11 @@ var request = require('request'); // "Request" library
 
 // Define file path to database
 const filePath = path.join(__dirname, './../database.json');
+// create a Redis client with existing instance details
+const client = redis.createClient({
+  host: '127.0.0.1',
+  port: '6379'
+});
 
 const modeChoiceView = (req, res) => {
     console.time();
@@ -22,88 +27,68 @@ const modeChoiceView = (req, res) => {
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
 
-
-    // Read the existing data from the database
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      let jsonData = JSON.parse(data);
-
-      // Check if the key exists in the JSON data
-      if (jsonData.hasOwnProperty(storedState)) {
+    (async () => {
+      client.on("error", (error) => console.error(`Error : ${error}`));
+    
+      await client.connect();
+      var res = await client.hExists('users', state);
+      if (res === 1) {
+        console.log('Field exists!');
         stateInDatabase = true;
+      } else {
+        console.log('Field does not exist!');
       }
+    })();
 
-      if ((state === null || state !== storedState) === true && stateInDatabase === false) {
+    if ((state === null || state !== storedState) === true && stateInDatabase === false) {
         console.log("REDIRECT");
         res.redirect('/#' +
            querystring.stringify({
               error: 'state_mismatch'
            }));
       }
-      else {
-        // create a Redis client with existing instance details
-        const client = redis.createClient({
-          host: '127.0.0.1',
-          port: '6379'
-        });
-  
-        // Check if the key exists in the JSON data
-        if (jsonData.hasOwnProperty(state)) {
-          console.log('The key already exists in the JSON data.');
-        }
-        else{
-          // If the key does not exist, add it to the database Along with spotify display name
+    else {  
+        // If the key does not exist, add it to the database Along with spotify display name
           
-          var authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
-            form: {
-              code: code,
-              grant_type: 'authorization_code',
-              redirect_uri: redirect_uri
-            },
-            headers: {
-              'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-            },
-            json: true
-          };
+        var authOptions = {
+          url: 'https://accounts.spotify.com/api/token',
+          form: {
+            code: code,
+            grant_type: 'authorization_code',
+            redirect_uri: redirect_uri
+          },
+          headers: {
+            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+          },
+          json: true
+        };
+      
+        request.post(authOptions, function(error, response, body) {
+          if (!error && response.statusCode === 200) {
         
-          request.post(authOptions, function(error, response, body) {
-            if (!error && response.statusCode === 200) {
-          
-              var access_token = body.access_token;
+            var access_token = body.access_token;
 
-              var options = {
-                url: 'https://api.spotify.com/v1/me',
-                headers: { 'Authorization': 'Bearer ' + access_token },
-                json: true
-              };
-              // use the access token to access the Spotify Web API
-              request.get(options, function(error, response, body) {
-                    // spotify id, spotify display name, and spotify access token in the database
-                    jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
+            var options = {
+              url: 'https://api.spotify.com/v1/me',
+              headers: { 'Authorization': 'Bearer ' + access_token },
+              json: true
+            };
+            // use the access token to access the Spotify Web API
+            request.get(options, function(error, response, body) {
+                  // spotify id, spotify display name, and spotify access token in the database
+                  jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
 
-                    (async () => {
-                      client.on("error", (error) => console.error(`Error : ${error}`));
-                    
-                      await client.connect();
-                      // Set the auth key as the key for the personal database
-                      await client.hSet('users', state, JSON.stringify(jData));
-                      console.timeEnd();
-                    })();
-                })
-            }
-            else{  console.log("ERROR ",response.body) }
-          })
-        }
-        // This is looking at views diretory 
-        res.render("mode", {
-        }); 
-      }
-    });
+                  (async () => {
+                    await client.hSet('users', state, JSON.stringify(jData));
+                    console.timeEnd();
+                  })();
+              })
+          }
+          else{  console.log("ERROR ",response.body) }
+        })
+      // This is looking at views diretory 
+      return res.render("mode", {}); 
+    }
 }
 
 module.exports = modeChoiceView;
