@@ -36,10 +36,6 @@ const modeChoiceView = async(req, res) => {
     console.log('Field exists!');
     stateInDatabase = true;
   } 
-  else{
-    console.log("here1");
-  }
-  console.log("here2");
 
   if ((state === null || state !== storedState) === true && stateInDatabase === false) {
       console.log("REDIRECT");
@@ -49,7 +45,7 @@ const modeChoiceView = async(req, res) => {
           }));
     }
   else {  
-      // If the key does not exist, add it to the database Along with spotify display name
+      // TODO: Add a check for if state in database already.
         
       var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
