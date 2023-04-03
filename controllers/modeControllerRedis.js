@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+// database
 const redis = require('redis');
 
 var querystring = require('querystring');
@@ -11,8 +10,6 @@ var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 
 var request = require('request'); // "Request" library
 
-// Define file path to database
-const filePath = path.join(__dirname, './../database.json');
 // create a Redis client with existing instance details
 const client = redis.createClient({
   host: '127.0.0.1',
@@ -45,7 +42,7 @@ const modeChoiceView = async(req, res) => {
           }));
     }
   else {  
-      // TODO: Add a check for if state in database already.
+      // TODO: Add a check for if state in database already. Is this necessary?
         
       var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -75,7 +72,7 @@ const modeChoiceView = async(req, res) => {
                 // spotify id, spotify display name, and spotify access token in the database
                 jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
 
-                client.hSet('users', state, JSON.stringify(jData));
+                client.hSet(state, jData);
                 console.timeEnd();
             })
         }
