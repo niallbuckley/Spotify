@@ -10,24 +10,21 @@ var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 
 var request = require('request'); // "Request" library
 
-// create a Redis client with existing instance details
-const client = redis.createClient({
-  host: '127.0.0.1',
-  port: '6379'
-});
+//database
+const { getRedisClient } = require('./redisConnection');
+const client = getRedisClient();
+client.connect();
 
 const modeChoiceView = async(req, res) => {
-  
   console.time();
   var code = req.query.code || null;
   var state = req.query.state || null;
   var stateInDatabase = false;
   // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-
+  console.log(client);
   client.on("error", (error) => console.error(`Error : ${error}`));
-  
-  await client.connect();
+
   var r = await client.hExists('users', state);
   if (r) {
     console.log('Field exists!');
