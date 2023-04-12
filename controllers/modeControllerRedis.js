@@ -13,7 +13,6 @@ var request = require('request'); // "Request" library
 //database
 const { getRedisClient } = require('./redisConnection');
 const client = getRedisClient();
-client.connect();
 
 const modeChoiceView = async(req, res) => {
   console.time();

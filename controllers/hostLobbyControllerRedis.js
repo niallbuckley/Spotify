@@ -1,22 +1,18 @@
 var querystring = require('querystring');
 
 // Database
-const redis = require('redis');
+//const redis = require('redis');
 
 var stateKey = 'spotify_auth_state';
 
-const client = redis.createClient({
-  host: '127.0.0.1',
-  port: '6379'
-});
+const { getRedisClient } = require('./redisConnection');
+const client = getRedisClient();
 
 const hostLobbyView = async(req, res) => {
-    
     var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
-    
-    await client.connect();
+    //await client.connect();
     var r = await client.exists(storedState);
     if (r) {
       console.log('Field exists!');
@@ -52,7 +48,6 @@ const hostLobbyView = async(req, res) => {
       const clients = new Set();
       // keep track of messages sent
       const messageHistory = [];
-
       // broadcast a message to all clients
       function broadcast(message) {
         for (const client of clients) {
@@ -66,7 +61,7 @@ const hostLobbyView = async(req, res) => {
           socket.send(message);
         }
       }
-      
+
       // listen for new WebSocket connections
       wss.on('connection', (socket) => {
         console.log('New client connected');
