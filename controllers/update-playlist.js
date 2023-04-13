@@ -1,11 +1,5 @@
 // PUT Upate the playlist with the users songs
-const fs = require('fs');
-const path = require('path');
-const { hasUncaughtExceptionCaptureCallback } = require('process');
 const request = require('request'); 
-
-const playlistDatabase = path.join(__dirname, '.././playlist-database.json');
-const userDatabase = path.join(__dirname, '.././database.json');
 
 const { getRedisClient } = require('./redisConnection');
 const client = getRedisClient();
@@ -34,7 +28,7 @@ var updatePlaylist = async(userState, playListId) => {
         user_song_json_str = JSON.stringify(user_song_arr);
         client.hSet(playListId, userState, user_song_json_str);
         return;
-        
+
     });
 }
 module.exports = updatePlaylist;
