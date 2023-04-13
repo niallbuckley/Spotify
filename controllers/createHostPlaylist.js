@@ -3,13 +3,26 @@ const fs = require('fs');
 const path = require('path');
 
 const playlistDatabase = path.join(__dirname, '.././playlist-database.json');
+
+
 var stateKey = 'spotify_auth_state';
 
 const updatePlaylist = require('./update-playlist');
 
+const { getRedisClient } = require('./redisConnection');
+const client = getRedisClient();
 
-var createHostPlaylist = function(req, res)  {
+
+var createHostPlaylist = async(req, res) => {
     // create endpoint /group-playlist/<id>
+    console.log("playlist id? ", req.body.playListId);
+    const playListId = req.body.playListId;
+    const storedState = req.cookies ? req.cookies[stateKey] : null;
+
+    //await client.hSet(playListId, {}, "");
+
+    updatePlaylist(storedState,playListId);
+    /*
     console.log("playlist id? ", req.body.playListId);
     const playListId = req.body.playListId;
 
@@ -34,7 +47,7 @@ var createHostPlaylist = function(req, res)  {
         console.log('Playlist instance was stored in database');
         updatePlaylist(storedState,playListId);
         });
-    });
+    });*/
     // This is done in parallel with the create playlist --> possibly an issue!
     return res.json({"data": "Testing"});
 };
