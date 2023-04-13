@@ -1,8 +1,5 @@
 var querystring = require('querystring');
 
-// Database
-//const redis = require('redis');
-
 var stateKey = 'spotify_auth_state';
 
 const { getRedisClient } = require('./redisConnection');

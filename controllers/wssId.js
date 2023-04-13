@@ -1,30 +1,20 @@
-const express = require('express');
-const app = express();
+const { getRedisClient } = require('./redisConnection');
+const client = getRedisClient();
 
-const fs = require('fs');
-const path = require('path');
-const filePath = path.join(__dirname, '.././database.json');
-
-var getwssId = function (req, res) {
+var getwssId = async(req, res) => {
     user = req.cookies.spotify_auth_state;
-    // Read the existing data from the database
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-  
-        let jsonData = JSON.parse(data);
-  
-        // Check if the key exists in the JSON data
-        if (jsonData.hasOwnProperty(user)) {
-            const data = { wss_id : jsonData[user]["wss_id"]};
-            return res.json(data)
-        }
-        else{
-            console.log("Error user not found in database.")
-        }
-    })
+    
+    var r = await client.exists(user);
+    if (!r){
+        console.log("Error user not found in database.")
+        return
+    }
+
+    var wss_id = await client.hGet(user, "wss_id");
+
+    const data = { "wss_id" : wss_id};
+    
+    return res.json(data)
 }
 
 module.exports = getwssId;

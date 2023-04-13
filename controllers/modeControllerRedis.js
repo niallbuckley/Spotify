@@ -21,7 +21,6 @@ const modeChoiceView = async(req, res) => {
   var stateInDatabase = false;
   // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-  console.log(client);
   client.on("error", (error) => console.error(`Error : ${error}`));
 
   var r = await client.hExists('users', state);
