@@ -2,7 +2,7 @@ var querystring = require('querystring');
 const fs = require('fs');
 const path = require('path');
  
-// Define the filepath
+// D
 const filePath = path.join(__dirname, './../database.json');
 
 var stateKey = 'spotify_auth_state';

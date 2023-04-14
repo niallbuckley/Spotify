@@ -13,6 +13,7 @@ var request = require('request'); // "Request" library
 const filePath = path.join(__dirname, './../database.json');
 
 const modeChoiceView = (req, res) => {
+    console.time();
     var code = req.query.code || null;
     var state = req.query.state || null;
     var stateInDatabase = false;
@@ -91,6 +92,7 @@ const modeChoiceView = (req, res) => {
                         console.error(err);
                         return;
                       }
+                      console.timeEnd();
                       console.log('The spotify username was successfully added to the JSON data.');
                     });
                 })

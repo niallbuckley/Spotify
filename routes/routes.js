@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const loginView = require('../controllers/loginController');
-const modeChoiceView = require('../controllers/modeController');
-const hostLobbyView = require('../controllers/hostLobbyController');
+const modeChoiceView = require('../controllers/modeControllerRedis');
+const hostLobbyView = require('../controllers/hostLobbyControllerRedis');
 const joinLobbyView = require('../controllers/joinLobbyController');
 const getUserSpotifyUserName = require('../controllers/spotifyUsername');
 const getwssId = require('../controllers/wssId');
