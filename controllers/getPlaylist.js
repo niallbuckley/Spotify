@@ -27,7 +27,7 @@ var getPlaylist = async(req, res) => {
     // Iterate through the playlist user songs
     for (var user of user_keys){
         // Iterate through the songs pushing only randomly selected ones
-        console.log(user);
+        console.log("user: ", user);
         user_songs = await client.hGet(playListId, user);
         user_songs = JSON.parse(user_songs);
         randomInt = Math.floor(Math.random() * users_in_session);
@@ -60,14 +60,14 @@ var getPlaylist = async(req, res) => {
             console.error(error);
             
         } 
-        console.log(body.id);
+        console.log("created playlist id: ", body.id);
         var options = {
             url: 'https://api.spotify.com/v1/playlists/' + body.id + '/tracks',
             headers: { 'Authorization': 'Bearer ' + access_token },
             json: true,
             body: playlist
         };
-        // post the songs to the created playlist.
+        // post the songs (in var playlist) to the created playlist.
         request.post(options, function(error, response, body) {
             if (error) {
                 console.error(error);
