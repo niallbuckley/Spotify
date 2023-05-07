@@ -26,6 +26,7 @@ var updatePlaylist = async(userState, playListId) => {
             user_song_arr.push(body.items[i].uri);
         }
         user_song_json_str = JSON.stringify(user_song_arr);
+        console.log("TEST here: ", playListId, userState, user_song_json_str)
         client.hSet(playListId, userState, user_song_json_str);
         return;
 

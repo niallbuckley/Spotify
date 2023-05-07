@@ -60,7 +60,7 @@ var getPlaylist = async(req, res) => {
             console.error(error);
             
         } 
-        console.log("created playlist id: ", body.id);
+        console.log("created playlist id: ", body.id, playlist);
         var options = {
             url: 'https://api.spotify.com/v1/playlists/' + body.id + '/tracks',
             headers: { 'Authorization': 'Bearer ' + access_token },
@@ -73,7 +73,7 @@ var getPlaylist = async(req, res) => {
                 console.error(error);
                 
             } 
-            
+            console.log("POSTED playlist \n")
         })
     });
     return res.json({"getPlaylist": "Testing"});
