@@ -12,7 +12,7 @@ var updatePlaylist = async(userState, playListId) => {
         return
     }
     // use the access token to access the Spotify Web API
-    var access_token = await client.hGet(user, "spot_a_t");
+    var access_token = await client.hGet(userState, "spot_a_t");
 
     var options = {
         url: 'https://api.spotify.com/v1/me/top/tracks',
@@ -20,7 +20,6 @@ var updatePlaylist = async(userState, playListId) => {
         json: true
     };
     request.get(options, function(error, response, body) {
-    
         user_song_arr = []
         for (let i=0; i<body.items.length; i++){
             user_song_arr.push(body.items[i].uri);
