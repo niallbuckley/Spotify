@@ -11,3 +11,4 @@
 
 database.json
 playlist-database.json
+*.rdb
