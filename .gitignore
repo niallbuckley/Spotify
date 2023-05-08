@@ -8,7 +8,11 @@
 .DS_Store?
 ._*
 
-
+# persistent database generated files #
+######################
 database.json
 playlist-database.json
+
+# in-mem database generated files #
+######################
 *.rdb
