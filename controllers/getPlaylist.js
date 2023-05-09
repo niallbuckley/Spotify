@@ -33,10 +33,12 @@ var getPlaylist = async(req, res) => {
             playlist.push(user_songs[i]);
         }
     }
-            
+
+    // Potential TODO: parse through each user like for loop above and send the playlist to everyone.
+    host_user = req.cookies[stateKey];
     // use the access token to access the Spotify Web API
-    var access_token = await client.hGet(user, "spot_a_t");
-    var user_id = await client.hGet(user, "spot_id");
+    var access_token = await client.hGet(host_user, "spot_a_t");
+    var user_id = await client.hGet(host_user, "spot_id");
     const now = new Date();
     
     var myBody = {
