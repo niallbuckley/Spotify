@@ -12,6 +12,7 @@ var request = require('request'); // "Request" library
 
 //database
 const { getRedisClient } = require('./redisConnection');
+const { reject } = require('lodash');
 const client = getRedisClient();
 
 const modeChoiceView = async(req, res) => {
@@ -23,11 +24,26 @@ const modeChoiceView = async(req, res) => {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
   client.on("error", (error) => console.error(`Error : ${error}`));
 
-  var r = await client.hExists('users', state);
-  if (r) {
-    console.log('Field exists!');
-    stateInDatabase = true;
-  } 
+  function readFromDatabase() {
+    return new Promise((resolve,reject) => {
+      function retry(){
+        var r = client.hExists('users', state);
+        if (r) {
+          console.log('Field exists!');
+          stateInDatabase = true;
+          resolve(stateInDatabase);
+        } 
+        else{
+          console.log("Still not written to database hhhmmmmmmmm");
+          setTimeout(readFromDatabase, 1000);
+        }
+      }
+    retry();
+
+    });
+  }
+  readFromDatabase().then((data) => {  
+
 
   if ((state === null || state !== storedState) === true && stateInDatabase === false) {
       console.log("REDIRECT");
@@ -75,6 +91,8 @@ const modeChoiceView = async(req, res) => {
       })
       return res.render("mode", {}); 
   }
+  })
 }
+
 
 module.exports = modeChoiceView;
