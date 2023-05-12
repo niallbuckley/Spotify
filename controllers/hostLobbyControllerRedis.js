@@ -13,7 +13,7 @@ async function checkFieldExists(client, storedState) {
     console.log('Field exists!');
     return true;
   }
-  throw new Error('Field does not exist!');
+  throw new Error('User does not exist!');
 }
 
 const hostLobbyView = async(req, res) => {
@@ -97,16 +97,17 @@ const hostLobbyView = async(req, res) => {
         });
       });
       } else {
-        console.log("UNAUTH");
-        res.redirect('/#' +
+        console.log("This shouldn't ever get hit!!!!!")
+      }
+    } catch (error) {
+      // User doesn't exist. Handle it accordingly
+      console.log(`Max retries exceeded. Unable to perform the operation. Error: ${error.message}`);
+      console.log("UNAUTH");
+      res.redirect('/#' +
             querystring.stringify({
               error: 'state_mismatch'
             })
         );
-        // Field doesn't exist. Handle it accordingly
-      }
-    } catch (error) {
-      console.log(`Max retries exceeded. Unable to perform the operation. Error: ${error.message}`);
     }
 }
 
