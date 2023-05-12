@@ -1,31 +1,41 @@
 var querystring = require('querystring');
 
+const retry = require('async-retry');
+
 var stateKey = 'spotify_auth_state';
 
 const { getRedisClient } = require('./redisConnection');
 const client = getRedisClient();
 
+async function checkFieldExists(client, storedState) {
+  const r = await client.exists(storedState);
+  if (r) {
+    console.log('Field exists!');
+    return true;
+  }
+  throw new Error('Field does not exist!');
+}
+
 const hostLobbyView = async(req, res) => {
     var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
-    //await client.connect();
-    var r = await client.exists(storedState);
-    if (r) {
-      console.log('Field exists!');
-      stateInDatabase = true;
-    } 
 
-    if (stateInDatabase === false) {
-      console.log("UNAUTH");
-      res.redirect('/#' +
-          querystring.stringify({
-            error: 'state_mismatch'
-          })
-      );
-    }
-    else {
-      // This is looking at views diretory 
+    try {
+      const exists = await retry(async () => {
+        return await checkFieldExists(client, storedState);
+      }, {
+        retries: 3,
+        minTimeout: 1000,
+        onRetry: (err, attempt) => {
+          console.log(`Retrying (${attempt}/${3})...`);
+        },
+      });
+  
+      if (exists) {
+        // Field exists! Perform the desired action
+        stateInDatabase = true;
+        // This is looking at views diretory 
       res.render("hostLobby", {}); 
 
 
@@ -86,6 +96,17 @@ const hostLobbyView = async(req, res) => {
           clients.delete(socket);
         });
       });
+      } else {
+        console.log("UNAUTH");
+        res.redirect('/#' +
+            querystring.stringify({
+              error: 'state_mismatch'
+            })
+        );
+        // Field doesn't exist. Handle it accordingly
+      }
+    } catch (error) {
+      console.log(`Max retries exceeded. Unable to perform the operation. Error: ${error.message}`);
     }
 }
 
