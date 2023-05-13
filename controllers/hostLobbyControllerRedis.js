@@ -25,7 +25,8 @@ async function createWebSocketServer(storedState) {
 
   var randomString = generateIdFile();
 
-  const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
+  const new_port = await getAvailablePort();
+  const wss = new WebSocket.Server({ port: new_port, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
 
   // Write the wss to database
   await client.hSet(storedState, "wss_id", randomString);
@@ -46,6 +47,14 @@ async function createWebSocketServer(storedState) {
     for (const message of messageHistory) {
       socket.send(message);
     }
+  }
+
+  async function getAvailablePort() {
+    const server = new WebSocket.Server({ port: 0 }); // Pass 0 to let the OS assign an available port
+    await new Promise((resolve) => server.once('listening', resolve));
+    const port = server.address().port;
+    server.close();
+    return port;
   }
 
   // listen for new WebSocket connections
