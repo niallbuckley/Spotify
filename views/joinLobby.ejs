@@ -13,8 +13,10 @@
       </div>
       <div>
         <form id="myForm">
-          <label for="name">Enter your name:</label>
-          <input type="text" id="name" name="name">
+          <label for="name">Enter your playlist id:</label>
+          <input type="text" id="playlist_id" name="playlist_id_form">
+          <label for="name">Enter your port number:</label>
+          <input type="text" id="port_num" name="port_form">
           <button type="submit" onclick="submitForm()">Submit</button>
         </form>
       </div>
@@ -26,14 +28,16 @@
       //const formPressed = False;
       document.getElementById("myForm").addEventListener("submit", function(event) {
           event.preventDefault(); // Prevent the default form submission behavior
-          var name = document.getElementById("name").value;
+          var playlist_id = document.getElementById("playlist_id").value;
+          var port_num = document.getElementById("port_num").value;
+
 
           // Update playlist with user tracks
-          fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": name})})
+          fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": playlist_id})})
                 .then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
           
           // Start WS Server
-          server_url = 'ws://localhost:3000/id/' + name
+          server_url = `ws://localhost:${port_num}/id/` + playlist_id
           const socket = new WebSocket(server_url);
 
           // Open connection to the web socket sever

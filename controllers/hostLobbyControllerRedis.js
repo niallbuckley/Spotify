@@ -16,8 +16,81 @@ async function checkFieldExists(client, storedState) {
   throw new Error('User does not exist!');
 }
 
+async function createWebSocketServer(storedState) {
+  // create a new WebSocket server
+  console.log("create a new web socket")
+  const WebSocket = require('ws');
+
+  generateIdFile = require('./generateId');
+
+  var randomString = generateIdFile();
+
+  const new_port = await getAvailablePort();
+  console.log("new_port: ", new_port, storedState);
+  const wss = new WebSocket.Server({ port: new_port, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
+
+  // Write the wss to database
+  wss_data = {"id": randomString, "port": new_port}
+  await client.hSet(storedState, "wss_id", JSON.stringify(wss_data));
+
+  var wss_data = await client.hGet(storedState, "wss_id");
+
+  // keep track of connected clients
+  const clients = new Set();
+  // keep track of messages sent
+  const messageHistory = [];
+  // broadcast a message to all clients
+  function broadcast(message) {
+    for (const client of clients) {
+      client.send(message);
+    }
+  }
+
+  // send message history
+  function sendMessageHistory(socket) {
+    for (const message of messageHistory) {
+      socket.send(message);
+    }
+  }
+
+  async function getAvailablePort() {
+    const server = new WebSocket.Server({ port: 0 }); // Pass 0 to let the OS assign an available port
+    await new Promise((resolve) => server.once('listening', resolve));
+    const port = server.address().port;
+    server.close();
+    return port;
+  }
+
+  // listen for new WebSocket connections
+  wss.on('connection', (socket) => {
+    console.log('New client connected');
+
+    // add the new client to the set of connected clients
+    clients.add(socket);
+
+    sendMessageHistory(socket);
+
+    // listen for messages from the client
+    socket.on('message', (message) => {
+      console.log(`Received message: ${message}`);
+
+      // add message to chat history
+      messageHistory.push(message);
+      // broadcast the message to all clients
+      broadcast(message);
+    });
+
+    // listen for the socket to close
+    socket.on('close', () => {
+      console.log('Client disconnected');
+
+      // remove the client from the set of connected clients
+      clients.delete(socket);
+    });
+  });
+}
+
 const hostLobbyView = async(req, res) => {
-    var stateInDatabase = false;
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
 
@@ -31,73 +104,24 @@ const hostLobbyView = async(req, res) => {
           console.log(`Retrying (${attempt}/${3})...`);
         },
       });
-  
+
+      // If user is authorized to enter this page
       if (exists) {
-        // Field exists! Perform the desired action
-        stateInDatabase = true;
-        // This is looking at views diretory 
-      res.render("hostLobby", {}); 
-
-
-      // create a new WebSocket server
-      console.log("create a new web socket")
-      const WebSocket = require('ws');
-
-      generateIdFile = require('./generateId');
-      var randomString = generateIdFile();
-      
-      // Write the wss to database
-      await client.hSet(storedState, "wss_id", randomString);
-
-      const wss = new WebSocket.Server({ port: 3000, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
-      
-      // keep track of connected clients
-      const clients = new Set();
-      // keep track of messages sent
-      const messageHistory = [];
-      // broadcast a message to all clients
-      function broadcast(message) {
-        for (const client of clients) {
-          client.send(message);
+        
+        var r = await client.hExists(storedState, "wss_id");
+        
+        if (!r) {
+          createWebSocketServer(storedState);
+          // This is looking at views diretory
+          res.render("hostLobby", {}); 
         }
-      }
-
-      // send message history
-      function sendMessageHistory(socket) {
-        for (const message of messageHistory) {
-          socket.send(message);
+        else{
+          console.log("This user already created a host session!");
+          // add logic to reconnect you to old host session. 
         }
-      }
-
-      // listen for new WebSocket connections
-      wss.on('connection', (socket) => {
-        console.log('New client connected');
-
-        // add the new client to the set of connected clients
-        clients.add(socket);
-
-        sendMessageHistory(socket);
-
-        // listen for messages from the client
-        socket.on('message', (message) => {
-          console.log(`Received message: ${message}`);
-
-          // add message to chat history
-          messageHistory.push(message);
-          // broadcast the message to all clients
-          broadcast(message);
-        });
-
-        // listen for the socket to close
-        socket.on('close', () => {
-          console.log('Client disconnected');
-
-          // remove the client from the set of connected clients
-          clients.delete(socket);
-        });
-      });
-      } else {
-        console.log("This shouldn't ever get hit!!!!!")
+     } 
+     else {
+        console.log("This shouldn't ever get hit!!!!!");
       }
     } catch (error) {
       // User doesn't exist. Handle it accordingly
