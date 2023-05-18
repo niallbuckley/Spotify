@@ -10,9 +10,9 @@ var getwssId = async(req, res) => {
         return
     }
 
-    var wss_id = await client.hGet(user, "wss_id");
-
-    const data = { "wss_id" : wss_id};
+    var wss_data_str = await client.hGet(user, "wss_id");
+    wss_data = JSON.parse(wss_data_str);
+    const data = { "wss_id" : wss_data.id, "wss_port": wss_data.port};
     
     return res.json(data)
 }

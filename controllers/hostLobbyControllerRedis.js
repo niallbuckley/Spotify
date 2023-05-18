@@ -26,10 +26,14 @@ async function createWebSocketServer(storedState) {
   var randomString = generateIdFile();
 
   const new_port = await getAvailablePort();
+  console.log("new_port: ", new_port, storedState);
   const wss = new WebSocket.Server({ port: new_port, path: '/id/' + randomString, host: 'localhost', protocol: 'ws' });
 
   // Write the wss to database
-  await client.hSet(storedState, "wss_id", randomString);
+  wss_data = {"id": randomString, "port": new_port}
+  await client.hSet(storedState, "wss_id", JSON.stringify(wss_data));
+
+  var wss_data = await client.hGet(storedState, "wss_id");
 
   // keep track of connected clients
   const clients = new Set();
