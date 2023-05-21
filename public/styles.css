@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.content {
+  max-width: 400px;
+}
+
+h1 {
+  font-size: 100px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 100px;
+  margin-bottom: 20px;
+}
+
+button {
+  font-size: 24px;
+  padding: 15px 30px;
+}
