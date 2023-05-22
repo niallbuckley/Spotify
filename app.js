@@ -3,8 +3,11 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
+app.use(express.static('public'));
+
 // set all templates location to `/views` directory
 app.set('views', __dirname + '/views');
+
 
 app.set('view engine', 'ejs');
 

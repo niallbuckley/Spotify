@@ -1,0 +1,34 @@
+h1 {
+  font-size: 4vw;
+  margin-bottom: 2vw;
+}
+
+h2 {
+  font-size: 3vw;
+  margin-bottom: 2vw;
+}
+
+p {
+  font-size: 2.7vw;
+  margin-top: 0.5vw;
+  margin-bottom: 0.5vw;
+}
+
+button {
+  font-size: 2.7vw;
+  margin-top: 2vw;
+  padding: 1vw 2vw;
+}
+
+
+.btn-primary{
+  font-size: 2.7vw;
+  color:#fff;background-color:#428bca;border-color:#357ebd}.btn-primary:hover,
+  .btn-primary:focus,.btn-primary:active,.btn-primary.active,
+  .open .dropdown-toggle.btn-primary{color:#fff;background-color:#3276b1;border-color:#285e8e}.btn-primary:active,
+  .btn-primary.active,.open .dropdown-toggle.btn-primary{background-image:none}.btn-primary.disabled,
+  .btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,
+  .btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,
+  .btn-primary.disabled.active,.btn-primary[disabled].active,fieldset[disabled] .btn-primary.active{background-color:#428bca;border-color:#357ebd}
+
+
