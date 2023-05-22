@@ -3,7 +3,7 @@ h1 {
   margin-bottom: 2vw;
 }
 
-h1 {
+h2 {
   font-size: 3vw;
   margin-bottom: 2vw;
 }
@@ -20,22 +20,15 @@ button {
   padding: 1vw 2vw;
 }
 
-/* Media queries for responsive design 
-@media screen and (max-width: 768px) {
-  h1 {
-    font-size: 3.5vw;
-    margin-bottom: 2.5vw;
-  }
-  
-  p {
-    font-size: 2vw;
-    margin-bottom: 2.5vw;
-  }
-  
-  button {
-    font-size: 2vw;
-    margin-top: 1vw;
-    padding: 0.5vw 1vw;
-  }
-}
-*/
+
+.btn-primary{
+  font-size: 2.7vw;
+  color:#fff;background-color:#428bca;border-color:#357ebd}.btn-primary:hover,
+  .btn-primary:focus,.btn-primary:active,.btn-primary.active,
+  .open .dropdown-toggle.btn-primary{color:#fff;background-color:#3276b1;border-color:#285e8e}.btn-primary:active,
+  .btn-primary.active,.open .dropdown-toggle.btn-primary{background-image:none}.btn-primary.disabled,
+  .btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,
+  .btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,
+  .btn-primary.disabled.active,.btn-primary[disabled].active,fieldset[disabled] .btn-primary.active{background-color:#428bca;border-color:#357ebd}
+
+
