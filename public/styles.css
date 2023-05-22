@@ -1,11 +1,17 @@
 h1 {
   font-size: 4vw;
-  margin-bottom: 5vw;
+  margin-bottom: 2vw;
+}
+
+h1 {
+  font-size: 3vw;
+  margin-bottom: 2vw;
 }
 
 p {
   font-size: 2.7vw;
-  margin-bottom: 5vw;
+  margin-top: 0.5vw;
+  margin-bottom: 0.5vw;
 }
 
 button {
