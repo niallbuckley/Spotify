@@ -34,11 +34,12 @@
                   console.log("group playlist data: " + d)
 
                 server_url = `ws://localhost:${data.wss_port}/id/` + data.wss_id
-                host_lobby_link = `https://localhost:join-lobby?p=${data.wss_port}&id=${data.wss_id}`
+                host_lobby_link = `https://localhost:4111/join-lobby?p=${data.wss_port}&id=${data.wss_id}`
                 const linkDiv = document.getElementById('host-lobby-link');
-                const linkP = document.createElement('p');
-                linkP.innerText = host_lobby_link;
-                linkDiv.appendChild(linkP);
+                const linkA = document.createElement('a');
+                linkA.href = host_lobby_link;
+                linkA.innerText = host_lobby_link;
+                linkDiv.appendChild(linkA);
 
                 // connect to WS server
                 const socket = new WebSocket(server_url);
