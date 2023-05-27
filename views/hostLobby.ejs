@@ -11,11 +11,15 @@
         <h1>Host Lobby</h1>
         <h2> Waiting on others ...  </h2>
       </div>
+      <div id="host-lobby-link">
+        <!-- Once link is recieved from server it will be displayed here -->
+      </div>
+      </div>
       <div id="messages">
         <!-- existing messages will be displayed here -->
       </div>
       <div>
-      <button onclick="getPlaylist()">Click when ready</button>
+      <button class="btn btn-default" onclick="getPlaylist()">Click when ready</button>
       </div>
       <script>
           // Connect to web socket running on server
@@ -30,6 +34,12 @@
                   console.log("group playlist data: " + d)
 
                 server_url = `ws://localhost:${data.wss_port}/id/` + data.wss_id
+                host_lobby_link = `https://localhost:join-lobby?p=${data.wss_port}&id=${data.wss_id}`
+                const linkDiv = document.getElementById('host-lobby-link');
+                const linkP = document.createElement('p');
+                linkP.innerText = host_lobby_link;
+                linkDiv.appendChild(linkP);
+
                 // connect to WS server
                 const socket = new WebSocket(server_url);
 
