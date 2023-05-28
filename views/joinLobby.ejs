@@ -30,6 +30,7 @@
           event.preventDefault(); // Prevent the default form submission behavior
           var playlist_id = document.getElementById("playlist_id").value;
           var port_num = document.getElementById("port_num").value;
+          console.log("WAGA ", '<%= data.wss_port %>', " ", '<%= data.wss_id %>');
 
 
           // Update playlist with user tracks

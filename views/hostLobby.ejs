@@ -34,7 +34,7 @@
                   console.log("group playlist data: " + d)
 
                 server_url = `ws://localhost:${data.wss_port}/id/` + data.wss_id
-                host_lobby_link = `https://localhost:4111/join-lobby?p=${data.wss_port}&id=${data.wss_id}`
+                host_lobby_link = `http://localhost:4111/join-lobby?p=${data.wss_port}&id=${data.wss_id}`
                 const linkDiv = document.getElementById('host-lobby-link');
                 const linkA = document.createElement('a');
                 linkA.href = host_lobby_link;
