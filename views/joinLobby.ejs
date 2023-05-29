@@ -14,9 +14,9 @@
       <div>
         <form id="myForm">
           <label for="name">Enter your playlist id:</label>
-          <input type="text" id="playlist_id" name="playlist_id_form">
+          <input type="text" id="playlist_id" name="playlist_id_form" <% if (data.wss_id) { %>value="<%= data.wss_id %>"<% } %>>
           <label for="name">Enter your port number:</label>
-          <input type="text" id="port_num" name="port_form">
+          <input type="text" id="port_num" name="port_form" <% if (data.wss_port) { %>value="<%= data.wss_port %>"<% } %>>
           <button type="submit" onclick="submitForm()">Submit</button>
         </form>
       </div>
