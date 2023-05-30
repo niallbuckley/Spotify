@@ -14,6 +14,7 @@
       <div id="host-lobby-link">
         <!-- Once link is recieved from server it will be displayed here -->
       </div>
+      <button class="btn btn-clipboard" id="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
       </div>
       <div id="messages">
         <!-- existing messages will be displayed here -->
@@ -82,6 +83,16 @@
             get_playlist_url = 'http://localhost:4111/group-playlist/' + playLID
             fetch(get_playlist_url)
               .then(response => console.log(response.json()))
+          }
+
+          function copyToClipboard() {
+            const el = document.createElement('textarea');
+            el.value = host_lobby_link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Copied to clipboard!');
           }
 
       </script>
