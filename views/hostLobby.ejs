@@ -11,11 +11,12 @@
         <h1>Host Lobby</h1>
         <h2> Waiting on others ...  </h2>
       </div>
-      <div id="host-lobby-link">
+      <div id="host-lobby-link" class="link-container">
         <!-- Once link is recieved from server it will be displayed here -->
+        <a href="#" id="link" class="link">Host Lobby Link</a>
+        <button class="copy-btn" id="copy-btn" onclick="copyToClipboard()">C</button>
       </div>
-      <button class="copy-btn" id="copy-btn" onclick="copyToClipboard()">C</button>
-      </div>
+    </div>
       <div id="messages">
         <!-- existing messages will be displayed here -->
       </div>
@@ -36,11 +37,14 @@
 
                 server_url = `ws://localhost:${data.wss_port}/id/` + data.wss_id
                 host_lobby_link = `http://localhost:4111/join-lobby?p=${data.wss_port}&id=${data.wss_id}`
-                const linkDiv = document.getElementById('host-lobby-link');
-                const linkA = document.createElement('a');
-                linkA.href = host_lobby_link;
-                linkA.innerText = host_lobby_link;
-                linkDiv.appendChild(linkA);
+                const linkElement = document.getElementById('link');
+                //const linkA = document.createElement('a');
+                //linkA.href = host_lobby_link;
+                //linkA.innerText = host_lobby_link;
+                //linkDiv.appendChild(linkA);
+                console.log("HELLOO ",  host_lobby_link);
+                linkElement.href = host_lobby_link;
+                linkElement.innerText = host_lobby_link;
 
                 // connect to WS server
                 const socket = new WebSocket(server_url);
@@ -52,6 +56,7 @@
                   fetch('/spotify-username')
                       .then(response => response.json())
                       .then(data => {
+                        console.log(data.user_name);
                         var message = data.user_name + " (owner) has joined"
                         // Send message to web socket saying you have joined.
                         socket.send(message);
