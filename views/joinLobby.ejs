@@ -14,9 +14,9 @@
       <div>
         <form id="myForm">
           <label for="name">Enter your playlist id:</label>
-          <input type="text" id="playlist_id" name="playlist_id_form">
+          <input type="text" id="playlist_id" name="playlist_id_form" <% if (data.wss_id) { %>value="<%= data.wss_id %>"<% } %>>
           <label for="name">Enter your port number:</label>
-          <input type="text" id="port_num" name="port_form">
+          <input type="text" id="port_num" name="port_form" <% if (data.wss_port) { %>value="<%= data.wss_port %>"<% } %>>
           <button type="submit" onclick="submitForm()">Submit</button>
         </form>
       </div>
@@ -30,6 +30,7 @@
           event.preventDefault(); // Prevent the default form submission behavior
           var playlist_id = document.getElementById("playlist_id").value;
           var port_num = document.getElementById("port_num").value;
+          console.log("WAGA ", '<%= data.wss_port %>', " ", '<%= data.wss_id %>');
 
 
           // Update playlist with user tracks
