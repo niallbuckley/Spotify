@@ -93,6 +93,7 @@ async function createWebSocketServer(storedState) {
 const hostLobbyView = async(req, res) => {
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies ? req.cookies[stateKey] : null;
+    console.log("HEERRREEEE1 " , storedState);
 
     try {
       const exists = await retry(async () => {
