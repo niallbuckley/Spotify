@@ -24,8 +24,9 @@ const modeChoiceView = async(req, res) => {
   client.on("error", (error) => console.error(`Error : ${error}`));
 
   var r = await client.hExists('users', state);
+  // This codition nver gets hit -- r is never true!!
   if (r) {
-    console.log('Field exists!');
+    console.log('Field exists!!!!');
     stateInDatabase = true;
   } 
 
