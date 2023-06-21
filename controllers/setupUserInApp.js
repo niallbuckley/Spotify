@@ -40,7 +40,7 @@ function authenticatApplication(code, state){
           request.get(options, function(error, response, body) {
                 // spotify id, spotify display name, and spotify access token in the database
                 jData = {"spot_user_name": body.display_name, "spot_a_t": access_token, "spot_id": body.id };
-
+                console.log("SS: ", state);
                 client.hSet(state, jData);
                 console.timeEnd();
             })

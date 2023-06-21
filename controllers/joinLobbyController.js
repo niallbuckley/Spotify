@@ -8,20 +8,23 @@ var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
 
+const setUpUser = require('./setupUserInApp');
+
 const joinLobbyView = async(req, res) => {
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies && req.cookies[stateKey] ? req.cookies[stateKey] : "null";
+    var code = req.query.code || null;
     console.log("stored state: ", storedState);
-    if (storedState != "null"){
-      client.hSet(storedState, {"test":"test1"});
-    }
+    
+    
     var r = await client.exists(storedState);
-    if (!r) {
+    if (storedState == "null") {
       // if not, send the loginSpotifyController to the user with the same params they used initally. 
       console.log("UNAUTH ", req.url);
       generateRandomString = require('./generateId');
       var state = generateRandomString(16);
       res.cookie(stateKey, state);
+      res.cookie("hello", "hi")
       var scope = 'user-read-private user-read-email user-top-read playlist-modify-private playlist-modify-public';
       res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
@@ -32,14 +35,16 @@ const joinLobbyView = async(req, res) => {
           state: state
         })
       );
-
+      console.log("HEeerreee!")
     }
-    const data = {
-      wss_port: req.query.p,
-      wss_id: req.query.id
-    };
+    else{
+      const data = {
+        wss_port: req.query.p,
+        wss_id: req.query.id
+      };
 
-    res.render("joinLobby", { data })
+      res.render("joinLobby", { data })
+  }
 }
 
 module.exports = joinLobbyView;
