@@ -38,10 +38,20 @@ const joinLobbyView = async(req, res) => {
           state: state
         })
       );
-      console.log("HEeerreee!");
     }
     else{
       // When user logs in the query should be seen to above the cookie. If no param use cookie
+      console.log("here1");
+      var r = await client.exists(storedState);
+      console.log("here2");
+      if (!r){
+        // If user doesn't exist, Add to database
+        console.log("here3");
+        //start promise here
+        setUpUser(code, storedState, "http://localhost:4111/join-lobby");
+
+      }
+
       const data = {};
       if (req.query.p && req.query.id){
         data["wss_port"] = req.query.p;
@@ -51,7 +61,7 @@ const joinLobbyView = async(req, res) => {
         data["wss_port"] = req.cookies["wss_port"]
         data["wss_id"] = req.cookies["wss_id"]
       }
-
+      // only serve if promise has completed.
       res.render("joinLobby", { data })
   }
 }

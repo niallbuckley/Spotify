@@ -1,5 +1,4 @@
 
-var redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 
@@ -12,7 +11,8 @@ const redis = require('redis');
 const { getRedisClient } = require('./redisConnection');
 const client = getRedisClient();
 
-function authenticatApplication(code, state){
+function authenticatApplication(code, state, redirect_uri){
+      console.log("here4 ", redirect_uri)
       var authOptions = {
               url: 'https://accounts.spotify.com/api/token',
               form: {

@@ -34,7 +34,7 @@ const modeChoiceView = async(req, res) => {
       // TODO: Add a check for if state in database already. Is this necessary?
 
       // Setup user 
-      setUpUser(code, state);
+      setUpUser(code, state, process.env.SPOTIFY_REDIRECT_URI); // Your redirect uri);
       return res.render("mode", {}); 
   }
 }
