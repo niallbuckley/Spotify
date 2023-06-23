@@ -20,11 +20,14 @@ const joinLobbyView = async(req, res) => {
     var r = await client.exists(storedState);
     if (storedState == "null") {
       // if not, send the loginSpotifyController to the user with the same params they used initally. 
-      console.log("UNAUTH ", req.url);
+      console.log("UNAUTH " + req.url);
       generateRandomString = require('./generateId');
       var state = generateRandomString(16);
       res.cookie(stateKey, state);
-      res.cookie("hello", "hi")
+      if (req.query.p && req.query.id){
+        res.cookie("wss_port", req.query.p);
+        res.cookie("wss_id", req.query.id);
+      }
       var scope = 'user-read-private user-read-email user-top-read playlist-modify-private playlist-modify-public';
       res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
@@ -35,13 +38,19 @@ const joinLobbyView = async(req, res) => {
           state: state
         })
       );
-      console.log("HEeerreee!")
+      console.log("HEeerreee!");
     }
     else{
-      const data = {
-        wss_port: req.query.p,
-        wss_id: req.query.id
-      };
+      // When user logs in the query should be seen to above the cookie. If no param use cookie
+      const data = {};
+      if (req.query.p && req.query.id){
+        data["wss_port"] = req.query.p;
+        data["wss_id"] = req.query.id;
+      }
+      else if (req.cookies["wss_port"] && req.cookies["wss_port"]){
+        data["wss_port"] = req.cookies["wss_port"]
+        data["wss_id"] = req.cookies["wss_id"]
+      }
 
       res.render("joinLobby", { data })
   }
