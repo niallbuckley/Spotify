@@ -14,7 +14,6 @@ const joinLobbyView = async(req, res) => {
     // checking if the request has cookies, if it does, what it checks for the auth state if it can't find either return null.
     var storedState = req.cookies && req.cookies[stateKey] ? req.cookies[stateKey] : "null";
     var code = req.query.code || null;
-    console.log("stored state: ", storedState);
     
     
     var r = await client.exists(storedState);
@@ -41,12 +40,9 @@ const joinLobbyView = async(req, res) => {
     }
     else{
       // When user logs in the query should be seen to above the cookie. If no param use cookie
-      console.log("here1");
       var r = await client.exists(storedState);
-      console.log("here2");
       if (!r){
         // If user doesn't exist, Add to database
-        console.log("here3");
         //start promise here
         setUpUser(code, storedState, "http://localhost:4111/join-lobby");
 

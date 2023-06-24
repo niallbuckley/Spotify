@@ -44,7 +44,7 @@
           // Open connection to the web socket sever
           socket.addEventListener('open', (event) => {
             console.log('WebSocket connected');
-            //possible that user is not set up yet need to retry if that is the case!
+            // Possible that user is not set up yet need to retry if that is the case!
             fetch('/spotify-username')
                 .then(response => response.json())
                 .then(data => {
