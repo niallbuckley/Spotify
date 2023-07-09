@@ -33,7 +33,7 @@
           console.log("WAGA ", '<%= data.wss_port %>', " ", '<%= data.wss_id %>');
 
           // should have a check to see if the user is already in join lobby before this!
-          fetch('/check-duplicates?playlist=${playlist_id}')
+          fetch('/check-duplicate?playlist=${playlist_id}')
             .then(response => response.json())
             .then(data => {
               if (data.userExists){
