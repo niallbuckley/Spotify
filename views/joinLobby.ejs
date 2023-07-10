@@ -33,10 +33,10 @@
           console.log("WAGA ", '<%= data.wss_port %>', " ", '<%= data.wss_id %>');
 
           // should have a check to see if the user is already in join lobby before this!
-          fetch('/check-duplicate?playlist=${playlist_id}')
+          fetch('/check-duplicate/' + playlist_id)
             .then(response => response.json())
             .then(data => {
-              if (data.userExists){
+              if (data.userExists === "false"){
                     // Update playlist with user tracks
                     fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": playlist_id})})
                           .then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
@@ -73,6 +73,9 @@
                     });
               // Need to delete user from database on socket.close
               }
+            else{
+              console.log("User already in playlist session");
+            }
         })
 
         })
