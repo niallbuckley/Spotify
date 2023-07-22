@@ -32,41 +32,55 @@
           var port_num = document.getElementById("port_num").value;
           console.log("WAGA ", '<%= data.wss_port %>', " ", '<%= data.wss_id %>');
 
+          // should have a check to see if the user is already in join lobby before this!
+          fetch('/check-duplicate/' + playlist_id)
+            .then(response => response.json())
+            .then(data => {
+              if (data.userExists === "false"){
+                    // Update playlist with user tracks
+                    fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": playlist_id})})
+                          .then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
+                    
+                    // Start WS Server
+                    server_url = `ws://localhost:${port_num}/id/` + playlist_id
+                    const socket = new WebSocket(server_url);
 
-          // Update playlist with user tracks
-          fetch('/group-playlist', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"playListId": playlist_id})})
-                .then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
-          
-          // Start WS Server
-          server_url = `ws://localhost:${port_num}/id/` + playlist_id
-          const socket = new WebSocket(server_url);
+                    // Open connection to the web socket sever
+                    socket.addEventListener('open', (event) => {
+                      console.log('WebSocket connected');
+                      // Possible that user is not set up yet need to retry if that is the case!
+                      fetch('/spotify-username')
+                          .then(response => response.json())
+                          .then(data => {
+                            message = data.user_name + " has joined"
+                            socket.send(message);
+                          })
+                          .catch(error => console.error(error));
+                    });
 
-          // Open connection to the web socket sever
-          socket.addEventListener('open', (event) => {
-            console.log('WebSocket connected');
-            // Possible that user is not set up yet need to retry if that is the case!
-            fetch('/spotify-username')
-                .then(response => response.json())
-                .then(data => {
-                  message = data.user_name + " has joined"
-                  socket.send(message);
-                })
-                .catch(error => console.error(error));
-          });
-
-          // Received a message from the web socket
-          socket.addEventListener('message', (event) => {
-            console.log("message received")
-            const messagesDiv = document.getElementById('messages');
-            const messageP = document.createElement('p');
-            if (event.data instanceof Blob) {
-              event.data.text().then(text => { 
-                console.log(text);
-                messageP.innerText = text;
-                messagesDiv.appendChild(messageP);
-              })
+                    // Received a message from the web socket
+                    socket.addEventListener('message', (event) => {
+                      console.log("message received")
+                      const messagesDiv = document.getElementById('messages');
+                      const messageP = document.createElement('p');
+                      if (event.data instanceof Blob) {
+                        event.data.text().then(text => { 
+                          console.log(text);
+                          messageP.innerText = text;
+                          messagesDiv.appendChild(messageP);
+                        })
+                      }
+                    });
+              // Need to delete user from database on socket.close
+              }
+            else{
+              console.log("User already in playlist session");
+              const messagesDiv = document.getElementById('messages');
+              const messageP = document.createElement('p');
+              messageP.innerText = "User already in playlist session"
+              messagesDiv.appendChild(messageP);
             }
-          });
+        })
 
         })
       </script>
