@@ -75,6 +75,10 @@
               }
             else{
               console.log("User already in playlist session");
+              const messagesDiv = document.getElementById('messages');
+              const messageP = document.createElement('p');
+              messageP.innerText = "User already in playlist session"
+              messagesDiv.appendChild(messageP);
             }
         })
 
